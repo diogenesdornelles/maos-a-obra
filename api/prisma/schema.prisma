@@ -1,0 +1,203 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjetoStatus {
+  EM_ANDAMENTO @map("EM_ANDAMENTO")
+  CONCLUIDO    @map("CONCLUIDO")
+  CANCELADO    @map("CANCELADO")
+}
+
+enum Funcao {
+  ADMIN    @map("ADMIN")
+  COMUM    @map("COMUM")
+}
+
+model Usuario {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome         String
+  sobrenome    String
+  cpf          String    @unique
+  nascimento   DateTime? @db.Date
+  email        String    @unique
+  funcao       Funcao    @default(COMUM)
+  senha        String
+  status       Boolean   @default(true)
+  criadoEm     DateTime  @default(now()) @map("criado_em")
+  atualizadoEm DateTime  @default(now()) @map("atualizado_em")
+
+  clientes     Cliente[]
+  projetos     Projeto[]
+  enderecos     Endereco[]
+
+  @@map("usuarios")
+}
+
+model Cliente {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enderecoId   String?   @db.Uuid @map("endereco_id")
+  usuarioId    String    @db.Uuid @map("usuario_id")
+  nome         String
+  sobrenome    String?
+  cpf          String?   @unique
+  cnpj         String?   @unique
+  nascimento   DateTime? @db.Date
+  telefone     String?
+  email        String?   @unique
+  status       Boolean   @default(true)
+  criadoEm     DateTime  @default(now()) @map("criado_em")
+  atualizadoEm DateTime  @default(now()) @map("atualizado_em")
+
+  usuario      Usuario   @relation(fields: [usuarioId], references: [id])
+  endereco     Endereco? @relation(fields: [enderecoId], references: [id])
+  projetos     Projeto[]
+
+  @@map("clientes")
+}
+
+model Endereco {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  logradouro   String
+  numero       String?
+  complemento  String?
+  usuarioId    String    @db.Uuid @map("usuario_id")
+  bairroId     String    @db.Uuid @map("bairro_id")
+  pais         String    @default("Brasil")
+  cep          String?
+  status       Boolean   @default(true)
+  criadoEm     DateTime  @default(now()) @map("criado_em")
+  atualizadoEm DateTime  @default(now()) @map("atualizado_em")
+  usuario      Usuario   @relation(fields: [usuarioId], references: [id])
+  bairro       Bairro    @relation(fields: [bairroId], references: [id])
+  clientes     Cliente[]
+
+  @@map("enderecos")
+}
+
+model Item {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  codigo       String    @unique
+  nomenclatura String
+  unidade      String
+  status       Boolean   @default(true)
+  criadoEm     DateTime  @default(now()) @map("criado_em")
+  atualizadoEm DateTime  @default(now()) @map("atualizado_em")
+
+  precos       Preco[]
+  projetoItens ProjetoItem[]
+
+  @@map("itens")
+}
+
+model Estado {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  codigoUf     Int      @unique @map("codigo_uf")
+  nome         String
+  uf           String   @db.Char(2)
+  regiao       Int
+  status       Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @default(now()) @map("atualizado_em")
+  projetos     Projeto[]
+  precos       Preco[]
+
+  @@map("estados")
+}
+
+model Municipio {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome         String
+  codigo       Int      @unique
+  uf           String   @db.Char(2)
+  status       Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @default(now()) @map("atualizado_em")
+
+  @@map("municipios")
+}
+
+model Bairro {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  codigo       String   @unique @db.Char(10)
+  nome         String
+  uf           String   @db.Char(2)
+  status       Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @default(now()) @map("atualizado_em")
+
+  enderecos    Endereco[]
+
+  @@map("bairros")
+}
+
+model Preco {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId       String   @db.Uuid @map("item_id")
+  estadoId     String   @db.Uuid @map("estado_id")
+  valor        Decimal  @db.Decimal(12, 2)
+  status       Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @default(now()) @map("atualizado_em")
+
+  item         Item     @relation(fields: [itemId], references: [id])
+  estado       Estado   @relation(fields: [estadoId], references: [id])
+
+  @@unique([itemId, estadoId])
+  @@map("precos")
+}
+
+model Projeto {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId    String        @db.Uuid @map("usuario_id")
+  clienteId    String        @db.Uuid @map("cliente_id")
+  estadoId     String        @db.Uuid @map("estado_id")
+  nome         String
+  descricao    String?
+  valorTotal   Decimal  @default(0) @db.Decimal(10, 2) @map("valor_total")
+  status       ProjetoStatus @default(EM_ANDAMENTO)
+  criadoEm     DateTime      @default(now()) @map("criado_em")
+  atualizadoEm DateTime      @default(now()) @map("atualizado_em")
+
+  usuario      Usuario       @relation(fields: [usuarioId], references: [id])
+  estado       Estado        @relation(fields: [estadoId],  references: [id])
+  cliente      Cliente       @relation(fields: [clienteId], references: [id])
+  itens        ProjetoItem[]
+
+  @@map("projetos")
+}
+
+model ProjetoItem {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projetoId    String   @db.Uuid @map("projeto_id")
+  itemId       String   @db.Uuid @map("item_id")
+  quantidade   Decimal  @default(1) @db.Decimal(10, 2)
+  preco        Decimal  @default(0) @db.Decimal(10, 2)
+  codigo       String?   
+  nomenclatura String?
+  unidade      String?
+  status       Boolean  @default(true)
+  valorTotal   Decimal  @default(0) @db.Decimal(10, 2) @map("valor_total")
+  criadoEm     DateTime @default(now()) @map("criado_em")
+  atualizadoEm DateTime @default(now()) @map("atualizado_em")
+
+  projeto      Projeto  @relation(fields: [projetoId], references: [id])
+  item         Item     @relation(fields: [itemId], references: [id])
+
+  @@unique([projetoId, itemId])
+  @@map("projeto_itens")
+}

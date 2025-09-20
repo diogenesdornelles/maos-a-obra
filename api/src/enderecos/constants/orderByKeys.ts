@@ -1,0 +1,8 @@
+import { defaultOrderByKeys } from 'src/constants/defaultOrderByKeys';
+
+export const orderByKeys = [
+  ...defaultOrderByKeys,
+  'logradouro',
+  'cep',
+  'numero',
+];

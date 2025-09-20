@@ -1,0 +1,671 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-08-27T12:00:00.000Z",
+  "__export_source": "maos-a-obra:insomnia-regenerated",
+  "resources": [
+    { "_id": "wrk_maos_a_obra", "_type": "workspace", "name": "Mãos à Obra API", "scope": "collection" },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_maos_a_obra",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:5000",
+        "token": "PASTE_JWT_TOKEN_HERE",
+        "ids": {
+          "usuarioId": "00000000-0000-0000-0000-000000000010",
+          "bairroId": "00000000-0000-0000-0000-000000000001",
+          "enderecoId": "00000000-0000-0000-0000-000000000002",
+          "clienteId": "00000000-0000-0000-0000-000000000003",
+          "estadoId": "00000000-0000-0000-0000-000000000004",
+          "municipioId": "00000000-0000-0000-0000-000000000005",
+          "itemId": "00000000-0000-0000-0000-000000000006",
+          "precoId": "00000000-0000-0000-0000-000000000007",
+          "projetoId": "00000000-0000-0000-0000-000000000008",
+          "projetoItemId": "00000000-0000-0000-0000-000000000009"
+        }
+      }
+    },
+
+    { "_id": "fld_health", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Health" },
+    {
+      "_id": "req_health_get",
+      "_type": "request",
+      "parentId": "fld_health",
+      "name": "GET /health",
+      "method": "GET",
+      "url": "{{ _.base_url }}/health"
+    },
+
+    { "_id": "fld_auth", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Auth" },
+    {
+      "_id": "req_auth_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "POST /auth/login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"email\":\"user@example.com\",\"pass\":\"secret123\"}" }
+    },
+
+    { "_id": "fld_usuarios", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Usuarios" },
+    {
+      "_id": "req_usr_create",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "POST /usuarios",
+      "method": "POST",
+      "url": "{{ _.base_url }}/usuarios",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"João\",\"sobrenome\":\"Silva\",\"cpf\":\"12345678901\",\"email\":\"joao@example.com\",\"senha\":\"123456\"}" }
+    },
+    {
+      "_id": "req_usr_list",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "GET /usuarios",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_usr_search",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "GET /usuarios/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios/search?skip=0&take=10&nome=&email=&cpf=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_usr_me",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "GET /usuarios/me",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios/me",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_usr_one",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "GET /usuarios/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/usuarios/{{ _.ids.usuarioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_usr_patch",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "PATCH /usuarios/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/usuarios/{{ _.ids.usuarioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"João Edit\"}" }
+    },
+    {
+      "_id": "req_usr_delete",
+      "_type": "request",
+      "parentId": "fld_usuarios",
+      "name": "DELETE /usuarios/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/usuarios/{{ _.ids.usuarioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_bairros", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Bairros" },
+    {
+      "_id": "req_bairro_create",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "POST /bairros",
+      "method": "POST",
+      "url": "{{ _.base_url }}/bairros",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"codigo\":\"001\",\"nome\":\"Centro\",\"uf\":\"SP\"}" }
+    },
+    {
+      "_id": "req_bairro_list",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "GET /bairros",
+      "method": "GET",
+      "url": "{{ _.base_url }}/bairros",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_bairro_search",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "GET /bairros/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/bairros/search?skip=0&take=10&nome=&codigo=&uf=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_bairro_one",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "GET /bairros/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/bairros/{{ _.ids.bairroId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_bairro_patch",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "PATCH /bairros/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/bairros/{{ _.ids.bairroId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Centro Novo\"}" }
+    },
+    {
+      "_id": "req_bairro_delete",
+      "_type": "request",
+      "parentId": "fld_bairros",
+      "name": "DELETE /bairros/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/bairros/{{ _.ids.bairroId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_enderecos", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Enderecos" },
+    {
+      "_id": "req_end_create",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "POST /enderecos",
+      "method": "POST",
+      "url": "{{ _.base_url }}/enderecos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"bairroId\":\"{{ _.ids.bairroId }}\",\"logradouro\":\"Rua Exemplo\"}" }
+    },
+    {
+      "_id": "req_end_list",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "GET /enderecos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/enderecos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_end_search",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "GET /enderecos/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/enderecos/search?skip=0&take=10&logradouro=&cep=&numero=&status=&orderBy=logradouro&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_end_one",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "GET /enderecos/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/enderecos/{{ _.ids.enderecoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_end_patch",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "PATCH /enderecos/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/enderecos/{{ _.ids.enderecoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"numero\":\"200\"}" }
+    },
+    {
+      "_id": "req_end_delete",
+      "_type": "request",
+      "parentId": "fld_enderecos",
+      "name": "DELETE /enderecos/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/enderecos/{{ _.ids.enderecoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_clientes", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Clientes" },
+    {
+      "_id": "req_cli_create",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "POST /clientes",
+      "method": "POST",
+      "url": "{{ _.base_url }}/clientes",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Cliente Teste\"}" }
+    },
+    {
+      "_id": "req_cli_list",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "GET /clientes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_cli_search",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "GET /clientes/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/search?skip=0&take=10&nome=&cpf=&cnpj=&email=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_cli_one",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "GET /clientes/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clientes/{{ _.ids.clienteId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_cli_patch",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "PATCH /clientes/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/clientes/{{ _.ids.clienteId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Cliente Editado\"}" }
+    },
+    {
+      "_id": "req_cli_delete",
+      "_type": "request",
+      "parentId": "fld_clientes",
+      "name": "DELETE /clientes/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/clientes/{{ _.ids.clienteId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_estados", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Estados" },
+    {
+      "_id": "req_est_create",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "POST /estados",
+      "method": "POST",
+      "url": "{{ _.base_url }}/estados",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"codigoUf\":35,\"nome\":\"São Paulo\",\"uf\":\"SP\",\"regiao\":3}" }
+    },
+    {
+      "_id": "req_est_list",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "GET /estados",
+      "method": "GET",
+      "url": "{{ _.base_url }}/estados",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_est_search",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "GET /estados/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/estados/search?skip=0&take=10&nome=&uf=&codigoUf=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_est_one",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "GET /estados/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/estados/{{ _.ids.estadoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_est_patch",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "PATCH /estados/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/estados/{{ _.ids.estadoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Estado Editado\"}" }
+    },
+    {
+      "_id": "req_est_delete",
+      "_type": "request",
+      "parentId": "fld_estados",
+      "name": "DELETE /estados/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/estados/{{ _.ids.estadoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_municipios", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Municipios" },
+    {
+      "_id": "req_mun_create",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "POST /municipios",
+      "method": "POST",
+      "url": "{{ _.base_url }}/municipios",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Cidade X\",\"codigo\":3550308,\"uf\":\"SP\"}" }
+    },
+    {
+      "_id": "req_mun_list",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "GET /municipios",
+      "method": "GET",
+      "url": "{{ _.base_url }}/municipios",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_mun_search",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "GET /municipios/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/municipios/search?skip=0&take=10&nome=&uf=&codigo=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_mun_one",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "GET /municipios/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/municipios/{{ _.ids.municipioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_mun_patch",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "PATCH /municipios/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/municipios/{{ _.ids.municipioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nome\":\"Cidade Y\"}" }
+    },
+    {
+      "_id": "req_mun_delete",
+      "_type": "request",
+      "parentId": "fld_municipios",
+      "name": "DELETE /municipios/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/municipios/{{ _.ids.municipioId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_itens", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Itens" },
+    {
+      "_id": "req_item_create",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "POST /itens",
+      "method": "POST",
+      "url": "{{ _.base_url }}/itens",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"codigo\":\"SERV001\",\"nomenclatura\":\"Item X\",\"unidade\":\"h\"}" }
+    },
+    {
+      "_id": "req_item_list",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "GET /itens",
+      "method": "GET",
+      "url": "{{ _.base_url }}/itens",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_item_search",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "GET /itens/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/itens/search?skip=0&take=10&codigo=&nomenclatura=&unidade=&status=&orderBy=codigo&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_item_with_preco",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "GET /itens/preco",
+      "method": "GET",
+      "url": "{{ _.base_url }}/itens/preco?itemId={{ _.ids.itemId }}&estadoId={{ _.ids.estadoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_item_one",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "GET /itens/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/itens/{{ _.ids.itemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_item_patch",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "PATCH /itens/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/itens/{{ _.ids.itemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"nomenclatura\":\"Item X Edit\"}" }
+    },
+    {
+      "_id": "req_item_delete",
+      "_type": "request",
+      "parentId": "fld_itens",
+      "name": "DELETE /itens/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/itens/{{ _.ids.itemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_precos", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Precos" },
+    {
+      "_id": "req_preco_create",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "POST /precos",
+      "method": "POST",
+      "url": "{{ _.base_url }}/precos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"itemId\":\"{{ _.ids.itemId }}\",\"estadoId\":\"{{ _.ids.estadoId }}\",\"valor\":100.5}" }
+    },
+    {
+      "_id": "req_preco_list",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "GET /precos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/precos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_preco_search",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "GET /precos/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/precos/search?skip=0&take=10&itemId=&estadoId=&valorMin=&valorMax=&status=&orderBy=valor&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_preco_one",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "GET /precos/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/precos/{{ _.ids.precoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_preco_patch",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "PATCH /precos/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/precos/{{ _.ids.precoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"valor\":150.75}" }
+    },
+    {
+      "_id": "req_preco_delete",
+      "_type": "request",
+      "parentId": "fld_precos",
+      "name": "DELETE /precos/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/precos/{{ _.ids.precoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_projetos", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Projetos" },
+    {
+      "_id": "req_proj_create",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "POST /projetos",
+      "method": "POST",
+      "url": "{{ _.base_url }}/projetos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"clienteId\":\"{{ _.ids.clienteId }}\",\"estadoId\":\"{{ _.ids.estadoId }}\",\"nome\":\"Projeto A\"}" }
+    },
+    {
+      "_id": "req_proj_list",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "GET /projetos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projetos",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_proj_search",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "GET /projetos/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projetos/search?skip=0&take=10&usuarioId=&clienteId=&nome=&valorMin=&valorMax=&status=&orderBy=nome&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_proj_one",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "GET /projetos/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projetos/{{ _.ids.projetoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_proj_patch",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "PATCH /projetos/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/projetos/{{ _.ids.projetoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"status\":\"CONCLUIDO\"}" }
+    },
+    {
+      "_id": "req_proj_delete",
+      "_type": "request",
+      "parentId": "fld_projetos",
+      "name": "DELETE /projetos/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/projetos/{{ _.ids.projetoId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+
+    { "_id": "fld_projeto_itens", "_type": "request_group", "parentId": "wrk_maos_a_obra", "name": "Projeto Itens" },
+    {
+      "_id": "req_pitem_create",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "POST /projeto-itens",
+      "method": "POST",
+      "url": "{{ _.base_url }}/projeto-itens",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"projetoId\":\"{{ _.ids.projetoId }}\",\"itemId\":\"{{ _.ids.itemId }}\",\"quantidade\":2}" }
+    },
+    {
+      "_id": "req_pitem_list",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "GET /projeto-itens",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projeto-itens",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_pitem_search",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "GET /projeto-itens/search",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projeto-itens/search?skip=0&take=10&projetoId={{ _.ids.projetoId }}&itemId=&quantidade=&status=&orderBy=quantidade&orderDir=asc",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_pitem_one",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "GET /projeto-itens/{id}",
+      "method": "GET",
+      "url": "{{ _.base_url }}/projeto-itens/{{ _.ids.projetoItemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    },
+    {
+      "_id": "req_pitem_patch",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "PATCH /projeto-itens/{id}",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/projeto-itens/{{ _.ids.projetoItemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "mimeType": "application/json", "text": "{\"quantidade\":5}" }
+    },
+    {
+      "_id": "req_pitem_delete",
+      "_type": "request",
+      "parentId": "fld_projeto_itens",
+      "name": "DELETE /projeto-itens/{id}",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/projeto-itens/{{ _.ids.projetoItemId }}",
+      "authentication": { "type": "bearer", "token": "{{ _.token }}" }
+    }
+  ]
+}
