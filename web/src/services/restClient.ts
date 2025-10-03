@@ -1,6 +1,5 @@
+import { getSession } from '@/contexts/authStore';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-
-// import { getStoredSession } from '../../contexts/AuthContext/useStorage';
 
 export class ApiClient {
   private api: AxiosInstance;
@@ -19,8 +18,7 @@ export class ApiClient {
 
     this.api.interceptors.request.use(
       async (config) => {
-        // const session = await getStoredSession();
-        const session = { token: 'teste' };
+        const session = await getSession();
 
         if (session?.token) {
           config.headers.Authorization = `Bearer ${session.token}`;
@@ -33,7 +31,18 @@ export class ApiClient {
 
     this.api.interceptors.response.use(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => Promise.reject(error)
+      (error: AxiosError) => {
+        if (error.response) {
+          return Promise.reject({
+            status: error.response.status,
+            data: error.response.data,
+          });
+        }
+        if (error.request) {
+          return Promise.reject({ message: 'No response from server', request: error.request });
+        }
+        return Promise.reject({ message: error.message });
+      }
     );
   }
 
