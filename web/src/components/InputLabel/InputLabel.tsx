@@ -1,7 +1,8 @@
+import { Input } from '@/components/ui/input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
 import { Platform, Pressable, View } from 'react-native';
-import { Input } from '../ui/input';
+import { cn } from '../../lib/utils';
 import { Label } from '../ui/label';
 import { Text } from '../ui/text';
 
@@ -49,17 +50,18 @@ export function InputLabel({
       </Label>
       {type === 'date' ? (
         <>
-          <Pressable onPress={showDatepicker}>
+          <Pressable onPress={showDatepicker} testID="date-pressable">
             <Input
-              value={value || 'Selecione uma data'}
-              placeholder={placeholder}
+              value={value}
+              placeholder={placeholder || 'Selecione uma data'}
               editable={false}
               pointerEvents="none"
-              className={error ? 'border-red-500' : ''}
+              className={cn(error ? 'border-red-500' : '', 'opacity-100')}
             />
           </Pressable>
           {showDatePicker && (
             <DateTimePicker
+              testID="date-time-picker"
               value={selectedDate}
               mode="date"
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
