@@ -1,10 +1,39 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { getSession, restoreSession, validateToken } from '@/contexts/authStore';
 import { router, Stack } from 'expo-router';
-import { View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function InitialScreen() {
+  const session = getSession();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function init() {
+      await restoreSession();
+      setLoading(false);
+    }
+    init();
+  }, []);
+
+  useEffect(() => {
+    const decode = validateToken(session?.token);
+    if (decode) {
+      router.replace('/(platform)/home');
+    }
+  }, [session]);
+
+  if (loading) {
+    return (
+      <View className="flex h-full w-full items-center justify-center bg-white">
+        <ActivityIndicator size="large" />
+        <Text className="mt-4">Carregando...</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -14,11 +43,11 @@ export default function InitialScreen() {
             <Text className="text-2xl">Mãos à obra</Text>
           </View>
         </SafeAreaView>
-        <View className="h-1/4 justify-center gap-5 bg-gray-300 px-5">
-          <Button variant="default" onPress={() => router.push('/(auth)/login')}>
+        <View className="h-[300px] justify-center gap-5 bg-gray-300 px-5">
+          <Button variant="default" onPress={() => router.replace('/(auth)/login')}>
             <Text>Login</Text>
           </Button>
-          <Button variant="default" onPress={() => router.push('/(auth)/signUp')}>
+          <Button variant="default" onPress={() => router.replace('/(auth)/signUp')}>
             <Text>Registrar</Text>
           </Button>
         </View>
