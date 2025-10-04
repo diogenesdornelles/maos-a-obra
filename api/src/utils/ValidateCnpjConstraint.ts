@@ -15,6 +15,7 @@ export class ValidateCnpjConstraint implements ValidatorConstraintInterface {
 }
 
 export function validateCNPJ(cnpj: string): boolean {
+  if (!cnpj) return false;
   const cleanedCNPJ = cnpj.replace(/\D/g, '');
 
   if (cleanedCNPJ.length !== 14) {
