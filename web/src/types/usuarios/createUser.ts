@@ -15,7 +15,7 @@ export interface CreateUserForm {
   nome: string;
   sobrenome: string;
   cpf: string;
-  nascimento: string;
+  nascimento?: string;
   email: string;
   senha: string;
 }
