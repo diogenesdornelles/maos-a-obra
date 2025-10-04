@@ -9,6 +9,7 @@ import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { View } from 'react-native';
+import moment from 'moment';
 
 export default function SignUp() {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -59,7 +60,7 @@ export default function SignUp() {
         nome: data?.name,
         sobrenome: data?.lastName,
         cpf: data?.cpf,
-        nascimento: data?.bornDate,
+        nascimento: data?.bornDate ? moment(data.bornDate, 'DD/MM/YYYY').set({ hour: 3, minute: 0, second: 0, millisecond: 0 }).toISOString() : undefined,
         email: data?.email,
         senha: data?.password,
       },
