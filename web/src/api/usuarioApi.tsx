@@ -9,7 +9,7 @@ export const usersApi = {
       status: true,
     };
 
-    const data = await restClient.post<CreatedUser>('/usuarios', { body });
+    const data = await restClient.post<CreatedUser>('/usuarios', body);
 
     return data;
   },
