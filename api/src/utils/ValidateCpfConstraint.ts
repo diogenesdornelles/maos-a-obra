@@ -6,6 +6,7 @@ import {
 @ValidatorConstraint({ name: 'validateCpf', async: false })
 export class ValidateCpfConstraint implements ValidatorConstraintInterface {
   validate(cpf: string): boolean {
+    if (!cpf) return false;
     cpf = cpf.replace(/\D/g, '');
 
     if (!cpf || cpf.length !== 11 || /\D/g.test(cpf)) {
