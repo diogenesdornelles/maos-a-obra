@@ -1,9 +1,5 @@
-import { NestFactory } from '@nestjs/core';
-import {
-  BadRequestException,
-  ConsoleLogger,
-  ValidationPipe,
-} from '@nestjs/common';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
@@ -14,7 +10,7 @@ import {
 } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import helmet from 'helmet';
-// import { GlobalExceptionFilter } from './common/global/global-exception.filter';
+import { GlobalExceptionFilter } from './common/GlobalExceptionFilter';
 
 dotenv.config();
 
@@ -28,7 +24,7 @@ const corsOptions: cors.CorsOptions = {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger:
-      process.env.DEV_MODE === 'true'
+      process.env.NODE_ENV === 'dev'
         ? new ConsoleLogger({
             colors: true,
             prefix: 'MAO',
@@ -42,7 +38,7 @@ async function bootstrap() {
       crossOriginResourcePolicy: true,
     }),
   );
-  // app.useGlobalFilters(new GlobalExceptionFilter());
+
   app.use(morgan.default('dev'));
   app.useGlobalPipes(
     new ValidationPipe({
@@ -51,19 +47,10 @@ async function bootstrap() {
       forbidNonWhitelisted: false,
       transformOptions: { enableImplicitConversion: true },
       stopAtFirstError: false,
-      exceptionFactory: (errors) => {
-        const messages = errors.map((error) => ({
-          field: error.property,
-          constraints: error.constraints,
-        }));
-        return new BadRequestException({
-          statusCode: 400,
-          message: 'Validation failed',
-          errors: messages,
-        });
-      },
     }),
   );
+  const httpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapterHost));
   const config = new DocumentBuilder()
     .setTitle('Mãos à obra')
     .setDescription('API description')
