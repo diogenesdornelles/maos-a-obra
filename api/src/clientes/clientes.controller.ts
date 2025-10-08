@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
   Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
@@ -34,14 +35,12 @@ import { SearchClienteDto } from './dto/search-cliente.dto';
 import { ClienteOwnerGuard } from 'src/auth/cliente-owner.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
-import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('clientes')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Funcao.ADMIN, Funcao.COMUM)
 @Controller('clientes')
-@CacheTTL(0)
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) {}
 
