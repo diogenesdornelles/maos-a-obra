@@ -1,11 +1,11 @@
+import { InputText } from '@/components/Inputs/InputText';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
-import { InputLabel } from '../../src/components/InputLabel/InputLabel';
 
-describe('InputLabel', () => {
+describe('InputText', () => {
   it('renderiza label e placeholder', () => {
     const { getByText, getByPlaceholderText } = render(
-      <InputLabel label="Nome" placeholder="Digite seu nome" />
+      <InputText label="Nome" placeholder="Digite seu nome" />
     );
 
     expect(getByText('Nome')).toBeTruthy();
@@ -15,7 +15,7 @@ describe('InputLabel', () => {
   it('chama onChangeText no input padrão', () => {
     const onChangeText = jest.fn();
     const { getByPlaceholderText } = render(
-      <InputLabel placeholder="Email" onChangeText={onChangeText} />
+      <InputText placeholder="Email" onChangeText={onChangeText} />
     );
 
     fireEvent.changeText(getByPlaceholderText('Email'), 'teste@exemplo.com');
@@ -23,13 +23,8 @@ describe('InputLabel', () => {
   });
 
   it('mostra erro quando fornecido', () => {
-    const { getByText } = render(<InputLabel placeholder="Senha" error="Campo obrigatório" />);
+    const { getByText } = render(<InputText placeholder="Senha" error="Campo obrigatório" />);
 
     expect(getByText('Campo obrigatório')).toBeTruthy();
-  });
-
-  it('usa placeholder padrão no modo data', () => {
-    const { getByPlaceholderText } = render(<InputLabel type="date" />);
-    expect(getByPlaceholderText('Selecione uma data')).toBeTruthy();
   });
 });
