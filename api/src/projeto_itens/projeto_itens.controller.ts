@@ -33,14 +33,12 @@ import { SearchProjetoItemDto } from './dto/search-projeto_item.dto';
 import type { RequestWithUser } from 'src/auth/id-param-self.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
-import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('projeto-itens')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Funcao.ADMIN, Funcao.COMUM)
 @Controller('projeto-itens')
-@CacheTTL(0)
 export class ProjetoItensController {
   constructor(private readonly projetoItensService: ProjetoItensService) {}
 
