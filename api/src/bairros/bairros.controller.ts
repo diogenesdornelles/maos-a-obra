@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { BairrosService } from './bairros.service';
 import { CreateBairroDto } from './dto/create-bairro.dto';
@@ -31,11 +33,21 @@ import { Funcao } from 'src/usuarios/dto/create-usuario.dto';
 import { SearchBairroDto } from './dto/search-bairro.dto';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import {
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheTTL,
+  Cache,
+} from '@nestjs/cache-manager';
 
 @ApiTags('bairros')
 @Controller('bairros')
+@UseInterceptors(CacheInterceptor)
 export class BairrosController {
-  constructor(private readonly bairrosService: BairrosService) {}
+  constructor(
+    private readonly bairrosService: BairrosService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   @Post()
   @ApiBearerAuth()
@@ -63,6 +75,7 @@ export class BairrosController {
   @ApiOperation({
     summary: 'Listar todos os bairros',
   })
+  @CacheTTL(86400)
   async findAll() {
     return await this.bairrosService.findAll();
   }
@@ -86,6 +99,7 @@ export class BairrosController {
   @ApiOperation({
     summary: 'Busca avançada de bairros',
   })
+  @CacheTTL(86400)
   async find(@Query() q: SearchBairroDto) {
     const where: Prisma.BairroWhereInput = {};
     if (q.nome) where.nome = { contains: q.nome, mode: 'insensitive' };
@@ -107,6 +121,7 @@ export class BairrosController {
   @ApiOperation({
     summary: 'Busca de bairro por ID',
   })
+  @CacheTTL(86400)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.bairrosService.findOne({ id });
   }
