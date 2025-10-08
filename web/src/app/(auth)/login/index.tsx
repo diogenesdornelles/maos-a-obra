@@ -1,5 +1,5 @@
 import { InputLabel } from '@/components/InputLabel/InputLabel';
-import { Modal } from '@/components/modal';
+import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { signIn } from '@/contexts/authStore';
