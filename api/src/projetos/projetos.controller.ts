@@ -34,14 +34,12 @@ import type { RequestWithUser } from 'src/auth/id-param-self.guard';
 import { ProjetoOwnerGuard } from 'src/auth/projeto-owner.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
-import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('projetos')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Funcao.ADMIN, Funcao.COMUM)
 @Controller('projetos')
-@CacheTTL(0)
 export class ProjetosController {
   constructor(private readonly projetosService: ProjetosService) {}
 
