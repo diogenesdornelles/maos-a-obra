@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { EstadosService } from './estados.service';
 import { CreateEstadoDto } from './dto/create-estado.dto';
@@ -30,11 +32,21 @@ import { Roles } from 'src/auth/roles.decorator';
 import { SearchEstadoDto } from './dto/search-estado.dto';
 import { defaultGetParamsAssembler } from '../utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import {
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheTTL,
+  Cache,
+} from '@nestjs/cache-manager';
 
 @ApiTags('estados')
 @Controller('estados')
+@UseInterceptors(CacheInterceptor)
 export class EstadosController {
-  constructor(private readonly estadosService: EstadosService) {}
+  constructor(
+    private readonly estadosService: EstadosService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   @Post()
   @ApiBearerAuth()
@@ -56,6 +68,7 @@ export class EstadosController {
   @ApiOperation({
     summary: 'Listar estados',
   })
+  @CacheTTL(86400)
   async findAll() {
     return await this.estadosService.findAll();
   }
@@ -80,6 +93,7 @@ export class EstadosController {
   @ApiOperation({
     summary: 'Busca avançada de estados',
   })
+  @CacheTTL(86400)
   async find(@Query() q: SearchEstadoDto) {
     const where: Prisma.EstadoWhereInput = {};
     if (q.nome) where.nome = { contains: q.nome, mode: 'insensitive' };
@@ -97,6 +111,7 @@ export class EstadosController {
   @ApiOperation({
     summary: 'Busca de estado por ID',
   })
+  @CacheTTL(86400)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.estadosService.findOne({ id });
   }
