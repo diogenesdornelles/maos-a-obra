@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { getSession, restoreSession, validateToken } from '@/contexts/authStore';
-import { router, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,12 +18,9 @@ export default function InitialScreen() {
     init();
   }, []);
 
-  useEffect(() => {
-    const decode = validateToken(session?.token);
-    if (decode) {
-      router.replace('/(platform)/home');
-    }
-  }, [session]);
+  if (!loading && session?.token && validateToken(session.token)) {
+    return <Redirect href="/(platform)/home" />;
+  }
 
   if (loading) {
     return (
