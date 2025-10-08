@@ -34,11 +34,9 @@ import { SearchEnderecoDto } from './dto/search-endereco.dto';
 import type { RequestWithUser } from 'src/auth/id-param-self.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
-import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('enderecos')
 @Controller('enderecos')
-@CacheTTL(0)
 export class EnderecosController {
   constructor(private readonly enderecosService: EnderecosService) {}
 
