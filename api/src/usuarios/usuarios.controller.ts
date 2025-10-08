@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
   Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto, Funcao } from './dto/create-usuario.dto';
@@ -35,11 +36,9 @@ import { UsuarioProjetosResponseDto } from './dto/usuario-projetos-response.dto'
 import { CreateUserGuard } from 'src/auth/create-user.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
-import { CacheTTL } from '@nestjs/cache-manager';
 
 @ApiTags('usuarios')
 @Controller('usuarios')
-@CacheTTL(0)
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
