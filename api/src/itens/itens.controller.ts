@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { ItensService } from './itens.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -33,11 +35,21 @@ import { ItemPrecoResponseDto } from './dto/item-preco.response.dto';
 import { SearchItemPrecoDto } from './dto/search-item-preco.dto';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import {
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheTTL,
+  Cache,
+} from '@nestjs/cache-manager';
 
 @ApiTags('itens')
 @Controller('itens')
+@UseInterceptors(CacheInterceptor)
 export class ItensController {
-  constructor(private readonly itensService: ItensService) {}
+  constructor(
+    private readonly itensService: ItensService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   @Post()
   @ApiBearerAuth()
@@ -55,6 +67,7 @@ export class ItensController {
   @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({ description: 'Lista de itens', type: [ItemResponseDto] })
   @ApiOperation({ summary: 'Listar itens' })
+  @CacheTTL(86400)
   async findAll() {
     return await this.itensService.findAll();
   }
@@ -76,6 +89,7 @@ export class ItensController {
   @ApiQuery({ name: 'orderBy', required: false, type: String })
   @ApiQuery({ name: 'orderDir', required: false, enum: ['asc', 'desc'] })
   @ApiOperation({ summary: 'Busca de itens' })
+  @CacheTTL(86400)
   async find(@Query() q: SearchItenDto) {
     const where: Prisma.ItemWhereInput = {};
     if (q.codigo) where.codigo = { contains: q.codigo, mode: 'insensitive' };
@@ -113,6 +127,7 @@ export class ItensController {
   @ApiOperation({
     summary: 'Busca de item por ID',
   })
+  @CacheTTL(86400)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.itensService.findOne({ id });
   }
