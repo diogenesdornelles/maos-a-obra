@@ -1,15 +1,16 @@
-import { InputLabel } from '@/components/InputLabel/InputLabel';
-import { Modal } from '@/components/modal';
+import { InputDate } from '@/components/Inputs/InputDate';
+import { InputText } from '@/components/Inputs/InputText';
+import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { SignUpFormData, signUpSchema } from '@/features/(auth)/signUp/validations/registerForm';
 import { usePostCreateUser } from '@/hooks/queries/usuarios/usePostCreateUser';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
+import moment from 'moment';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { View } from 'react-native';
-import moment from 'moment';
 
 export default function SignUp() {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -60,7 +61,11 @@ export default function SignUp() {
         nome: data?.name,
         sobrenome: data?.lastName,
         cpf: data?.cpf,
-        nascimento: data?.bornDate ? moment(data.bornDate, 'DD/MM/YYYY').set({ hour: 3, minute: 0, second: 0, millisecond: 0 }).toISOString() : undefined,
+        nascimento: data?.bornDate
+          ? moment(data.bornDate, 'DD/MM/YYYY')
+              .set({ hour: 3, minute: 0, second: 0, millisecond: 0 })
+              .toISOString()
+          : undefined,
         email: data?.email,
         senha: data?.password,
       },
@@ -126,18 +131,28 @@ export default function SignUp() {
             key={cfg.name}
             control={control}
             name={cfg.name}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label={cfg.label}
-                placeholder={cfg.placeholder}
-                value={value}
-                onChangeText={onChange}
-                error={errors?.[cfg.name]?.message as string | undefined}
-                isRequired={cfg.required}
-                type={cfg.type}
-                secureTextEntry={cfg.secureTextEntry}
-              />
-            )}
+            render={({ field: { onChange, value } }) =>
+              cfg?.type === 'date' ? (
+                <InputDate
+                  label={cfg.label}
+                  placeholder={cfg.placeholder}
+                  value={value}
+                  onChangeText={onChange}
+                  error={errors?.[cfg.name]?.message as string | undefined}
+                  isRequired={cfg.required}
+                />
+              ) : (
+                <InputText
+                  label={cfg.label}
+                  placeholder={cfg.placeholder}
+                  value={value}
+                  onChangeText={onChange}
+                  error={errors?.[cfg.name]?.message as string | undefined}
+                  isRequired={cfg.required}
+                  secureTextEntry={cfg.secureTextEntry}
+                />
+              )
+            }
           />
         ))}
 
