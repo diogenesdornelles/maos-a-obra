@@ -1,36 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-// filepath: /home/dio/programacao/maos_a_obra_app/api/src/cache/cache.module.ts
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Module, Global } from '@nestjs/common';
-import { Cacheable } from 'cacheable';
-import { createKeyv } from '@keyv/redis';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
+import { Global, Module } from '@nestjs/common';
+import {
+  CacheModule as NestCacheModule,
+  CacheModuleOptions,
+} from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Global()
 @Module({
-  providers: [
-    {
-      provide: CACHE_MANAGER,
-      useFactory: () => {
-        const secondary = createKeyv(
-          process.env.REDIS_URL ?? 'redis://localhost:6379',
-        );
-        return new Cacheable({ secondary, ttl: 1000 * 60 * 60 * 24 });
+  imports: [
+    NestCacheModule.registerAsync({
+      useFactory: async (): Promise<CacheModuleOptions> => {
+        const host = process.env.REDIS_HOST || 'redis_db';
+        const port = parseInt(process.env.REDIS_PORT || '6379', 10);
+        const password = process.env.REDIS_PASSWORD || undefined;
+
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+          const store = await redisStore({
+            socket: {
+              host,
+              port,
+            },
+            password,
+            ttl: 0,
+          });
+          return {
+            store,
+            ttl: 0,
+          };
+        } catch (err) {
+          console.warn('[CACHE] Fallback memória. Erro Redis:', err);
+          return {
+            ttl: 0,
+            max: 0,
+          };
+        }
       },
-    },
-    {
-      provide: 'CACHE_INSTANCE',
-      useFactory: () => {
-        const secondary = createKeyv(
-          process.env.REDIS_URL ?? 'redis://localhost:6379',
-        );
-        return new Cacheable({ secondary, ttl: 1000 * 60 * 60 * 24 });
-      },
-    },
+    }),
   ],
-  exports: [CACHE_MANAGER, 'CACHE_INSTANCE'],
+  exports: [NestCacheModule],
 })
 export class CacheModule {}
