@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { PrecosService } from './precos.service';
 import { CreatePrecoDto } from './dto/create-preco.dto';
@@ -31,11 +33,21 @@ import { Roles } from 'src/auth/roles.decorator';
 import { SearchPrecoDto } from './dto/search-preco.dto';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import {
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheTTL,
+  Cache,
+} from '@nestjs/cache-manager';
 
 @ApiTags('precos')
 @Controller('precos')
+@UseInterceptors(CacheInterceptor)
 export class PrecosController {
-  constructor(private readonly precosService: PrecosService) {}
+  constructor(
+    private readonly precosService: PrecosService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   @Post()
   @ApiBearerAuth()
@@ -53,6 +65,7 @@ export class PrecosController {
   @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({ description: 'Lista de precos', type: [PrecoResponseDto] })
   @ApiOperation({ summary: 'Listar projetos' })
+  @CacheTTL(86400)
   async findAll() {
     return await this.precosService.findAll();
   }
@@ -75,6 +88,7 @@ export class PrecosController {
   @ApiQuery({ name: 'orderBy', required: false, type: String })
   @ApiQuery({ name: 'orderDir', required: false, enum: ['asc', 'desc'] })
   @ApiOperation({ summary: 'Busca avançada de projetos por params' })
+  @CacheTTL(86400)
   async find(@Query() q: SearchPrecoDto) {
     const where: Prisma.PrecoWhereInput = {};
     if (q.itemId) where.itemId = q.itemId;
@@ -95,6 +109,7 @@ export class PrecosController {
   @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({ description: 'Preco', type: PrecoResponseDto })
   @ApiOperation({ summary: 'Listar um projeto por ID' })
+  @CacheTTL(86400)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.precosService.findOne({ id });
   }
