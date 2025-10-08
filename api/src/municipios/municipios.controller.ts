@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Query,
   UseGuards,
+  UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { MunicipiosService } from './municipios.service';
 import { CreateMunicipioDto } from './dto/create-municipio.dto';
@@ -31,11 +33,21 @@ import { Roles } from 'src/auth/roles.decorator';
 import { SearchMunicipioDto } from './dto/search-municipios.dto';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import {
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheTTL,
+  Cache,
+} from '@nestjs/cache-manager';
 
 @ApiTags('municipios')
 @Controller('municipios')
+@UseInterceptors(CacheInterceptor)
 export class MunicipiosController {
-  constructor(private readonly municipiosService: MunicipiosService) {}
+  constructor(
+    private readonly municipiosService: MunicipiosService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
+  ) {}
 
   @Post()
   @ApiBearerAuth()
@@ -59,6 +71,7 @@ export class MunicipiosController {
     type: [CreateMunicipioDto],
   })
   @ApiOperation({ summary: 'Lista de municípios' })
+  @CacheTTL(86400)
   async findAll() {
     return await this.municipiosService.findAll();
   }
@@ -80,6 +93,7 @@ export class MunicipiosController {
   @ApiQuery({ name: 'orderBy', required: false, type: String })
   @ApiQuery({ name: 'orderDir', required: false, enum: ['asc', 'desc'] })
   @ApiOperation({ summary: 'Busca de municípios' })
+  @CacheTTL(86400)
   async find(@Query() q: SearchMunicipioDto) {
     const where: Prisma.MunicipioWhereInput = {};
     if (q.nome) where.nome = { contains: q.nome, mode: 'insensitive' };
@@ -96,6 +110,7 @@ export class MunicipiosController {
   @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({ description: 'Municípios', type: CreateMunicipioDto })
   @ApiOperation({ summary: 'Busca de município por ID' })
+  @CacheTTL(86400)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.municipiosService.findOne({ id });
   }
