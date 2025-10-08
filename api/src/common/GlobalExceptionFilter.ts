@@ -20,7 +20,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     this.logger.error(`Exception`, inspect(exception, { depth: 4 }));
-    this.logger.error(`Host`, inspect(host, { depth: 3 }));
     const ctx = host.switchToHttp();
     if (exception instanceof HttpException) {
       const httpStatus =
