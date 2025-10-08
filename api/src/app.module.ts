@@ -15,8 +15,6 @@ import configuration from '../config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { HealthModule } from './health/health.module';
-import { CacheInterceptor } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheModule } from './cache/cache.module';
 
 @Module({
@@ -44,14 +42,8 @@ import { CacheModule } from './cache/cache.module';
       ],
     }),
     AuthModule,
-    CacheModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}
