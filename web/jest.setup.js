@@ -2,6 +2,19 @@ jest.mock('nativewind', () => ({
   styled: (Component) => Component,
 }));
 
+jest.mock('@/components/ui/card', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    Card: ({ children, ...props }) => <View {...props}>{children}</View>,
+    CardHeader: ({ children, ...props }) => <View {...props}>{children}</View>,
+    CardTitle: ({ children, ...props }) => <View {...props}>{children}</View>,
+    CardDescription: ({ children, ...props }) => <View {...props}>{children}</View>,
+    CardContent: ({ children, ...props }) => <View {...props}>{children}</View>,
+    CardFooter: ({ children, ...props }) => <View {...props}>{children}</View>,
+  };
+});
+
 jest.mock('@/components/ui/button', () => {
   const React = require('react');
   const { Pressable, Text } = require('react-native');
