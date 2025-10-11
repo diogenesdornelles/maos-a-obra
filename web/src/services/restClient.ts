@@ -1,4 +1,6 @@
 import { getSession } from '@/contexts/authStore';
+import { ErrorApi } from '@/types/errorParser';
+
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export class ApiClient {
@@ -31,15 +33,18 @@ export class ApiClient {
 
     this.api.interceptors.response.use(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => {
+      (error: AxiosError<ErrorApi>) => {
         if (error.response) {
           return Promise.reject({
             status: error.response.status,
-            data: error.response.data,
+            data: error.response.data as ErrorApi,
           });
         }
         if (error.request) {
-          return Promise.reject({ message: 'No response from server', request: error.request });
+          return Promise.reject({
+            message: 'No response from server',
+            request: error.request,
+          });
         }
         return Promise.reject({ message: error.message });
       }
