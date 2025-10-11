@@ -37,8 +37,20 @@ export default function Home() {
       },
     },
     { label: 'Perfil', icon: User, onPress: () => {} },
-    { label: 'Clientes', icon: Users, onPress: () => {} },
-    { label: 'Consultas', icon: Search, onPress: () => {} },
+    {
+      label: 'Clientes',
+      icon: Users,
+      onPress: () => {
+        router.push('/(platform)/clientes');
+      },
+    },
+    {
+      label: 'Consultas',
+      icon: Search,
+      onPress: () => {
+        router.push('/(platform)/consultas');
+      },
+    },
     {
       label: 'Relatórios',
       icon: FileText,
