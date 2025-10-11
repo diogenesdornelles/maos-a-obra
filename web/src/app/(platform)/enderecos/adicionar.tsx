@@ -26,8 +26,6 @@ export default function EnderecosAdicionarScreen() {
 
   const { debouncedValue } = useDebounce(bairroSearch, 500);
 
-  // ---------------  APIS
-
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetBairrosBySearch(
     {
       nome: debouncedValue,
@@ -36,8 +34,6 @@ export default function EnderecosAdicionarScreen() {
   );
 
   const { mutate } = usePostCreateEndereco();
-
-  // --------------- LÓGICA
 
   const bairrosOptions: SelectOption[] = useMemo(() => {
     if (!data?.pages) return [];
@@ -84,7 +80,6 @@ export default function EnderecosAdicionarScreen() {
             setModalType('success');
           },
           onError: (erro) => {
-            console.log(erro);
             setIsOpen(true);
             setModalType('error');
           },
