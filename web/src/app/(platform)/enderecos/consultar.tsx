@@ -14,10 +14,10 @@ export default function EnderecosConsultarScreen() {
   const [numeroCasa, setNumeroCasa] = useState('');
 
   const [filters, setFilters] = useState<{
-    logradouro: string | null;
-    cep: string | null;
-    numero: number | null;
-  }>({ logradouro: null, cep: null, numero: null });
+    logradouro?: string;
+    cep?: string;
+    numero?: number;
+  }>({ logradouro: undefined, cep: undefined, numero: undefined });
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetEnderecosBySearch({
@@ -34,9 +34,9 @@ export default function EnderecosConsultarScreen() {
     const sanitizedNumero = numeroCasa.trim();
 
     return {
-      logradouro: logradouro.trim().length > 0 ? logradouro.trim() : null,
-      cep: sanitizedCep.length === 8 ? sanitizedCep : null,
-      numero: sanitizedNumero.length > 0 ? Number(sanitizedNumero) : null,
+      logradouro: logradouro?.trim()?.length > 0 ? logradouro.trim() : undefined,
+      cep: sanitizedCep.length === 8 ? sanitizedCep : undefined,
+      numero: sanitizedNumero.length > 0 ? Number(sanitizedNumero) : undefined,
     };
   }
 
