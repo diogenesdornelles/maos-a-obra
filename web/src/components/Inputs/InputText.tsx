@@ -12,6 +12,7 @@ interface InputTextProps {
   isRequired?: boolean;
   secureTextEntry?: boolean;
   keyboardType?: KeyboardType;
+  maxLength?: number;
 }
 
 export function InputText({
@@ -23,6 +24,7 @@ export function InputText({
   isRequired = false,
   secureTextEntry = false,
   keyboardType,
+  maxLength,
 }: InputTextProps) {
   return (
     <View className="mb-3">
@@ -32,6 +34,7 @@ export function InputText({
         </Label>
       )}
       <Input
+        maxLength={maxLength}
         keyboardType={keyboardType}
         value={value}
         onChangeText={onChangeText}
