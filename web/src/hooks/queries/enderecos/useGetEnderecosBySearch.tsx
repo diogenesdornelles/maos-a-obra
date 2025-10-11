@@ -2,19 +2,20 @@ import { enderecosApi } from '@/api/enderecosApi';
 import { EnderecosFilterQuery } from '@/types/enderecos/filtersQuery';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-export const useGetEnderecosBySearch = (filters: Omit<EnderecosFilterQuery, 'skip'>) => {
+export const useGetEnderecosBySearch = (filters?: Omit<EnderecosFilterQuery, 'skip'>) => {
   return useInfiniteQuery({
     queryKey: ['useGetEnderecosBySearch', filters],
     queryFn: ({ pageParam }) =>
       enderecosApi.getEnderecos({
-        ...filters,
+        ...(filters &&
+          Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== undefined))),
         skip: pageParam,
-      }),
+      } as EnderecosFilterQuery),
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      if (lastPage.length < (filters.take || 20)) {
+      if (lastPage.length < (filters?.take || 20)) {
         return undefined;
       }
-      return lastPageParam + (filters.take || 20);
+      return lastPageParam + (filters?.take || 20);
     },
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5,
