@@ -1,16 +1,14 @@
 import { BairrosProps } from '../bairros/bairros';
+import { BaseProps } from '../base';
 
-export interface EnderecoProps {
-  id: string;
-  criadoEm: string;
-  atualizadoEm: string;
+export interface EnderecoProps extends BaseProps {
   logradouro: string;
-  numero: string;
-  complemento: string;
+  numero?: string | null;
+  complemento?: string | null;
   bairroId: string;
   usuarioId: string;
   pais: string;
-  cep: string;
-  status: boolean;
+  cep?: string | null;
+  status?: boolean;
   bairro: BairrosProps;
 }
