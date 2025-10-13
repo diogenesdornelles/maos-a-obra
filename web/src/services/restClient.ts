@@ -1,6 +1,5 @@
 import { getSession } from '@/contexts/authStore';
 import { ErrorApi } from '@/types/errorParser';
-
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
 export class ApiClient {
