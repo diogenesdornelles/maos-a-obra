@@ -1,20 +1,16 @@
-export interface ItemProps {
-  id: string;
+import { BaseProps } from "../base";
+
+export interface ItemProps extends BaseProps {
   codigo: string;
   nomenclatura: string;
   unidade: string;
-  status: boolean;
-  criadoEm: string;
-  atualizadoEm: string;
+  status?: boolean;
 }
 
-export interface ItemPrecoProps {
-  id: string;
-  criadoEm: string;
-  atualizadoEm: string;
+export interface ItemPrecoProps extends BaseProps {
   codigo: string;
   nomenclatura: string;
   unidade: string;
   valor: string;
-  status: boolean;
+  status?: boolean;
 }
