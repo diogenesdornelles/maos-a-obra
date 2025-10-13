@@ -15,6 +15,11 @@ export const itensApi = {
     return data;
   },
 
+  getItemById: async (id: string) => {
+    const data = await restClient.get<ItemProps>(`/itens/${id}`);
+    return data;
+  },
+
   getItemPreco: async (params?: ItensPrecoFilterQuery) => {
     const searchParams = new URLSearchParams();
 
