@@ -77,7 +77,7 @@ export default function ClientesConsultarScreen() {
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: 'Clientes / itens' }} />
+      <Stack.Screen options={{ headerTitle: 'Consulta / itens' }} />
       <View className="m-5">
         <Select<ItemProps>
           label="Item"
