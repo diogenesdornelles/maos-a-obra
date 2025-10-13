@@ -1,10 +1,9 @@
-export interface EstadoProps {
-  id: string;
+import { BaseProps } from "../base";
+
+export interface EstadoProps extends BaseProps {
   codigoUf: string;
   nome: string;
   uf: string;
-  regiao: string;
-  status: boolean;
-  criadoEm: string;
-  atualizadoEm: string;
+  regiao: number;
+  status?: boolean;
 }
