@@ -8,10 +8,10 @@ export class EnderecoResponseDto extends BaseResponseDto {
   logradouro: string;
 
   @ApiProperty({ example: '123', required: false })
-  numero?: string;
+  numero?: string | null;
 
   @ApiProperty({ example: 'Apto 101', required: false })
-  complemento?: string;
+  complemento?: string | null;
 
   @ApiProperty({
     format: 'uuid',
@@ -33,7 +33,7 @@ export class EnderecoResponseDto extends BaseResponseDto {
     description: 'CEP sem formatação',
     required: false,
   })
-  cep?: string;
+  cep?: string | null;
 
   @ApiProperty({ required: false, default: true })
   status?: boolean;
