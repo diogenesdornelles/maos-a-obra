@@ -72,6 +72,7 @@ export class ProjetoItensController {
   @ApiQuery({ name: 'skip', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiQuery({ name: 'quantidade', required: false, type: Number })
+  @ApiQuery({ name: 'preco', required: false, type: Number })
   @ApiQuery({ name: 'projetoId', required: true, type: String })
   @ApiQuery({ name: 'itemId', required: false, type: String })
   @ApiQuery({ name: 'status', required: false, type: Boolean })
@@ -92,7 +93,13 @@ export class ProjetoItensController {
     }
     where.projetoId = q.projetoId;
     if (q.itemId) where.itemId = q.itemId;
-    if (q.quantidade !== undefined) where.quantidade = { gte: q.quantidade };
+    if (q.quantidade !== undefined)
+      where.quantidade = {
+        gte: Number(q.quantidade) ? Number(q.quantidade) : 0,
+      };
+
+    if (q.preco !== undefined)
+      where.preco = { gte: Number(q.preco) ? Number(q.preco) : 0 };
     const params = defaultGetParamsAssembler(q, where, orderByKeys);
     return await this.projetoItensService.find(params);
   }
