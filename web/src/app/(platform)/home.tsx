@@ -36,7 +36,7 @@ export default function Home() {
         setIsModalOpen(true);
       },
     },
-    { label: 'Perfil', icon: User, onPress: () => {} },
+    { label: 'Perfil', icon: User, onPress: () => router.push('/(platform)/perfil') },
     {
       label: 'Clientes',
       icon: Users,
