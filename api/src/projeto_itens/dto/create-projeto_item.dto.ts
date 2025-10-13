@@ -33,6 +33,7 @@ export class CreateProjetoItemDto {
     example: 2.5,
     minimum: 1,
     type: 'number',
+    default: 1.0,
   })
   @IsOptional()
   @Type(() => Number)
@@ -41,7 +42,23 @@ export class CreateProjetoItemDto {
     { message: 'quantidade deve ser um número com até 2 casas decimais' },
   )
   @Min(1, { message: 'quantidade deve ser maior ou igual a 1' })
-  quantidade: number;
+  quantidade?: number;
+
+  @ApiProperty({
+    description: 'Preço do item (pode ter até 2 casas decimais)',
+    example: 2.5,
+    minimum: 1,
+    type: 'number',
+    default: 0.0,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'preço deve ser um número com até 2 casas decimais' },
+  )
+  @Min(0, { message: 'quantidade deve ser maior ou igual a 0' })
+  preco?: number;
 
   @ApiPropertyOptional({
     description: 'Status ativo/inativo do item no projeto',
