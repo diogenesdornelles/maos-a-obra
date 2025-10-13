@@ -16,14 +16,14 @@ export default function EnderecosConsultarScreen() {
   const [filters, setFilters] = useState<{
     logradouro?: string;
     cep?: string;
-    numero?: number;
-  }>({ logradouro: undefined, cep: undefined, numero: undefined });
+    numero?: string;
+  }>({ logradouro: '', cep: '', numero: '' });
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetEnderecosBySearch({
       logradouro: filters?.logradouro,
       cep: filters?.cep,
-      numero: String(filters?.numero) || undefined,
+      numero: String(filters?.numero) || '',
       take: 20,
     });
 
@@ -34,9 +34,9 @@ export default function EnderecosConsultarScreen() {
     const sanitizedNumero = numeroCasa.trim();
 
     return {
-      logradouro: logradouro?.trim()?.length > 0 ? logradouro.trim() : undefined,
-      cep: sanitizedCep.length === 8 ? sanitizedCep : undefined,
-      numero: sanitizedNumero.length > 0 ? Number(sanitizedNumero) : undefined,
+      logradouro: logradouro?.trim()?.length > 0 ? logradouro.trim() : '',
+      cep: sanitizedCep.length === 8 ? sanitizedCep : '',
+      numero: sanitizedNumero.length > 0 ? sanitizedNumero : '',
     };
   }
 
@@ -60,7 +60,7 @@ export default function EnderecosConsultarScreen() {
             label="Número"
             placeholder="Digite o número da casa"
             onChangeText={setNumeroCasa}
-            value={numeroCasa ?? undefined}
+            value={numeroCasa ?? ''}
           />
         </View>
 
