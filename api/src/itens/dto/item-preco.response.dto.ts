@@ -11,8 +11,8 @@ export class ItemPrecoResponseDto extends BaseResponseDto {
   @ApiProperty({ example: 'm3' })
   unidade: string;
 
-  @ApiProperty({ type: 'number', format: 'decimal', example: 2.2 })
-  valor: number;
+  @ApiProperty({ type: 'string', format: 'decimal', example: '2.2' })
+  valor: string;
 
   @ApiProperty({ required: false, default: true })
   status?: boolean;
