@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Prisma, ProjetoItem } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ProjetoStatus } from 'src/projetos/dto/update-projeto.dto';
 
 @Injectable()
 export class ProjetoItensService {
@@ -19,43 +18,49 @@ export class ProjetoItensService {
     createProjetoItemDto: Prisma.ProjetoItemUncheckedCreateInput,
   ): Promise<ProjetoItem | null> {
     this.logger.log(`Body ${JSON.stringify(createProjetoItemDto)}`);
-    const item = await this.prisma.item.findUnique({
-      where: { id: createProjetoItemDto.itemId, status: true },
-    });
-    if (!item) {
-      throw new UnprocessableEntityException('Item não existe ou inativo');
-    }
-    const projeto = await this.prisma.projeto.findUnique({
-      where: {
-        id: createProjetoItemDto.projetoId,
-        status: { not: 'CANCELADO' },
-      },
-    });
-    if (!projeto) {
-      throw new UnprocessableEntityException('Projeto não existe ou cancelado');
+
+    const { projetoId, itemId, quantidade, preco } = createProjetoItemDto;
+
+    const quantidadeNumber = Number(quantidade);
+    if (!quantidadeNumber || quantidadeNumber < 0) {
+      throw new UnprocessableEntityException(
+        'Quantidade deve ser maior igual 0',
+      );
     }
 
-    const preco = await this.prisma.preco.findFirstOrThrow({
-      where: {
-        estadoId: projeto.estadoId,
-        itemId: item.id,
-        status: true,
-      },
-    });
+    const precoNumber = Number(preco);
+    if (!precoNumber || precoNumber < 0) {
+      throw new UnprocessableEntityException('Preço deve ser maior igual 0');
+    }
 
-    if (preco) {
-      const result = await this.prisma.projetoItem.create({
-        data: {
-          ...createProjetoItemDto,
-          preco: preco.valor,
-          nomenclatura: item.nomenclatura,
-          unidade: item.unidade,
-          codigo: item.codigo,
+    try {
+      await this.prisma.$executeRaw`
+        SELECT create_projeto_item(
+          ${quantidadeNumber}::decimal,
+          ${precoNumber}::decimal,
+          ${projetoId}::uuid,
+          ${itemId}::uuid
+        )
+      `;
+
+      const result = await this.prisma.projetoItem.findFirst({
+        where: {
+          projetoId,
+          itemId,
+        },
+        orderBy: {
+          atualizadoEm: 'desc',
         },
       });
+
       return result;
+    } catch (error) {
+      this.logger.error(`Erro ao criar projeto_item: ${error}`);
+
+      throw new UnprocessableEntityException(
+        'Erro ao criar item no projeto: ' + JSON.stringify(error),
+      );
     }
-    return null;
   }
 
   async findAll({
@@ -98,34 +103,44 @@ export class ProjetoItensService {
   ): Promise<ProjetoItem | null> {
     this.logger.log(`Where ${JSON.stringify(where)}`);
     this.logger.log(`Body ${JSON.stringify(updateProjetoItenDto)}`);
-    if (updateProjetoItenDto.itemId) {
-      const item = await this.prisma.item.findUnique({
-        where: { id: updateProjetoItenDto.itemId as string, status: true },
-      });
-      if (!item) {
-        throw new UnprocessableEntityException('Item não existe ou inativo');
-      }
+
+    const { quantidade, itemId, projetoId, preco } = updateProjetoItenDto;
+
+    if (
+      quantidade !== undefined &&
+      Number(quantidade) &&
+      Number(quantidade) <= 0
+    ) {
+      throw new UnprocessableEntityException('Quantidade deve ser maior que 0');
     }
 
-    if (updateProjetoItenDto.projetoId) {
-      const projeto = await this.prisma.projeto.findUnique({
-        where: {
-          id: updateProjetoItenDto.projetoId as string,
-          status: { not: 'CANCELADO' },
-        },
-      });
-      if (!projeto || projeto.status === ProjetoStatus.CANCELADO) {
-        throw new UnprocessableEntityException(
-          'Projeto não existe ou cancelado',
-        );
-      }
+    if (preco !== undefined && Number(preco) && Number(preco) < 0) {
+      throw new UnprocessableEntityException('Preço não pode ser negativo');
     }
 
-    const result = await this.prisma.projetoItem.update({
-      where,
-      data: updateProjetoItenDto,
-    });
-    return result;
+    try {
+      await this.prisma.$executeRaw`
+      SELECT update_projeto_item(
+        ${where.id}::uuid,
+        ${quantidade !== undefined ? quantidade : null}::decimal,
+        ${preco !== undefined ? preco : null}::decimal,
+        ${projetoId !== undefined ? projetoId : null}::uuid,
+        ${itemId !== undefined ? itemId : null}::uuid
+      )
+    `;
+
+      const result = await this.prisma.projetoItem.findUnique({
+        where,
+      });
+
+      return result;
+    } catch (error) {
+      this.logger.error(`Erro ao atualizar projeto_item: ${error}`);
+
+      throw new UnprocessableEntityException(
+        'Erro ao atualizar item no projeto: ' + JSON.stringify(error),
+      );
+    }
   }
 
   async remove(
