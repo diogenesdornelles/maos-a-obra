@@ -1,0 +1,1751 @@
+type: collection.insomnia.rest/5.0
+name: MAO
+meta:
+  id: wrk_7aa5fef6ea3f431197e9ac399f858a64
+  created: 1756325553906
+  modified: 1756325553906
+  description: ""
+collection:
+  - name: Auth
+    meta:
+      id: fld_d14fb11201b84facb63a69229ad3e838
+      created: 1756325705872
+      modified: 1760315703249
+      sortKey: -1756325705872
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/auth/login"
+        name: POST /auth/login
+        meta:
+          id: req_b90f5ebec392485cb3a22472df112261
+          created: 1756325705873
+          modified: 1760312773967
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705873
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"email": "diogenes.dornelles@gmail.com", "pass":"@123ABCabc"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("token", response.access_token);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuarios
+    meta:
+      id: fld_686a9e2fc7194365b561504f62464162
+      created: 1756325705874
+      modified: 1760314311727
+      sortKey: -1756325705874
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/usuarios"
+        name: POST /usuarios
+        meta:
+          id: req_ecb9155b4b0643618170d007c17ef1b0
+          created: 1756325705875
+          modified: 1760315918075
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705875
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "joao",
+            	"sobrenome": "Silva",
+            	"cpf": "52262554030",
+            	"email": "jao@example.com",
+            	"senha": "#123ABCabc",
+            	"nascimento": "1972-10-11T03:00:00.000Z"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("usuarioId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/usuarios"
+        name: GET /usuarios
+        meta:
+          id: req_eda14a393b4244a09ea24f9811f19d41
+          created: 1756325705876
+          modified: 1760314638633
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705876
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("usuarioId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/usuarios/search?skip=0&take=10&nome=&email=&cpf=&status=&orderBy=n\
+          ome&orderDir=asc"
+        name: GET /usuarios/search
+        meta:
+          id: req_be4001d5e46d44dcacc1d465710e764c
+          created: 1756325705877
+          modified: 1760315895099
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705877
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("usuarioId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/usuarios/{{ _.usuarioId }}"
+        name: GET /usuarios/{id}
+        meta:
+          id: req_4c1663d44fa54c50ab12f4080412f856
+          created: 1756325705878
+          modified: 1760315936352
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705878
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("usuarioId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/usuarios/me"
+        name: GET /usuarios/me
+        meta:
+          id: req_87957d0879a646b4a9d1e7c4f524afb6
+          created: 1756325705878
+          modified: 1760315940057
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705878
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("usuarioId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/usuarios/{{ _.usuarioId }}"
+        name: PATCH /usuarios/{id}
+        meta:
+          id: req_6f68403dad7645d895e923e378532a7d
+          created: 1756325705879
+          modified: 1760313603878
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705879
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nome":"João Edit"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/usuarios/{{ _.usuarioId }}"
+        name: DELETE /usuarios/{id}
+        meta:
+          id: req_f4a846921db7486cafe0eccddf7e5353
+          created: 1756325705880
+          modified: 1760313598621
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705880
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Bairros
+    meta:
+      id: fld_ad0f108b83cd4933bb1653fc1cc67fd2
+      created: 1756325705880
+      modified: 1760315710249
+      sortKey: -1756325705880
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/bairros"
+        name: POST /bairros
+        meta:
+          id: req_9b241ddd1ef14d4c8cf75f61e295c3a7
+          created: 1756325705881
+          modified: 1756325705881
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705881
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"codigo":"001","nome":"Centro","uf":"SP"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/bairros"
+        name: GET /bairros
+        meta:
+          id: req_78ef76c54516435eab6115fbbaf80d92
+          created: 1756325705882
+          modified: 1760314605021
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705882
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("bairroId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/bairros/search?skip=0&take=10&nome=&codigo=&uf=&status=&orderBy=no\
+          me&orderDir=asc"
+        name: GET /bairros/search
+        meta:
+          id: req_3c1a961e5a83485da05c3ac2ff943d93
+          created: 1756325705883
+          modified: 1760315964503
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705883
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("bairroId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/bairros/{{ _.bairroId }}"
+        name: GET /bairros/{id}
+        meta:
+          id: req_a371eeaeceb44e579019b0e39a08cc29
+          created: 1756325705883
+          modified: 1760315970058
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705883
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("bairroId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/bairros/{{ _.bairroId }}"
+        name: PATCH /bairros/{id}
+        meta:
+          id: req_98841be5449643ada4cb39d2df75732f
+          created: 1756325705884
+          modified: 1760313582140
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705884
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nome":"Centro Novo"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/bairros/{{ _.bairroId }}"
+        name: DELETE /bairros/{id}
+        meta:
+          id: req_be794705a1614380ab66c7cc5870425d
+          created: 1756325705884
+          modified: 1760313576173
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705884
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Enderecos
+    meta:
+      id: fld_04844e4835944ffeb28e8123265301ed
+      created: 1756325705884
+      modified: 1760315716692
+      sortKey: -1756325705884
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/enderecos"
+        name: POST /enderecos
+        meta:
+          id: req_5a4189c23b314c3db182c35d128f6650
+          created: 1756325705885
+          modified: 1760313979303
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705885
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"bairroId":"{{ _.bairroId }}","logradouro":"Rua Exemplo"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("enderecoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/enderecos"
+        name: GET /enderecos
+        meta:
+          id: req_f39dc504d7fe4c54a46231bfa2b81f07
+          created: 1756325705885
+          modified: 1760314653272
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705885
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("enderecoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/enderecos/search?skip=0&take=10&logradouro=&cep=&numero=&status=&o\
+          rderBy=logradouro&orderDir=asc"
+        name: GET /enderecos/search
+        meta:
+          id: req_0fe20cb10c6f4b09b565dfed469bc607
+          created: 1756325705886
+          modified: 1760315990271
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705886
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("enderecoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/enderecos/{{ _.enderecoId }}"
+        name: GET /enderecos/{id}
+        meta:
+          id: req_f48b57cf01d94b97a0dc743501896c76
+          created: 1756325705886
+          modified: 1760315984230
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705886
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("enderecoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/enderecos/{{ _.enderecoId }}"
+        name: PATCH /enderecos/{id}
+        meta:
+          id: req_634ce8077aa2405c8abca94d1768b970
+          created: 1756325705887
+          modified: 1760313560556
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705887
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"numero":"200"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/enderecos/{{ _.enderecoId }}"
+        name: DELETE /enderecos/{id}
+        meta:
+          id: req_ca7d393451cb4131b73e05ad04c0bf70
+          created: 1756325705887
+          modified: 1760313551347
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705887
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Clientes
+    meta:
+      id: fld_bc9e71ee2cf7402b84428ee8d3f4ab47
+      created: 1756325705887
+      modified: 1760315724923
+      sortKey: -1756325705887
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/clientes"
+        name: GET /clientes
+        meta:
+          id: req_7db6c524ab084164a212e6e5dbd92ae4
+          created: 1756325705888
+          modified: 1760314669572
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705888
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("clienteId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/clientes"
+        name: POST /clientes
+        meta:
+          id: req_b7a1190dcb12473f9df0097d07737750
+          created: 1756325705888
+          modified: 1760314473099
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705888
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome": "Joana",
+            	"sobrenome": "Dornelles",
+            	"enderecoId": "{{ _.enderecoId }}"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("clienteId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/clientes/{{ _.clienteId }}"
+        name: GET /clientes/{id}
+        meta:
+          id: req_0aa02717c9754f5ba38be03a26fe5149
+          created: 1756325705889
+          modified: 1760316010972
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705889
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("clienteId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/clientes/search?skip=0&take=10&nome=&cpf=&cnpj=&email=&status=&ord\
+          erBy=nome&orderDir=asc"
+        name: GET /clientes/search
+        meta:
+          id: req_e72ea38e0a824198983a8449961763df
+          created: 1756325705889
+          modified: 1760315998909
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705889
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("clienteId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/clientes/{{ _.ids.clienteId }}"
+        name: PATCH /clientes/{id}
+        meta:
+          id: req_5897f29cff8f4025951797dbfd7eb5a8
+          created: 1756325705890
+          modified: 1756325705890
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705890
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nome":"Cliente Editado"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/clientes/{{ _.clienteId }}"
+        name: DELETE /clientes/{id}
+        meta:
+          id: req_c8eebe3a8600421ab0348cd25c874ed3
+          created: 1756325705890
+          modified: 1760313523421
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705890
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Estados
+    meta:
+      id: fld_800eba3116fc46aa9169e8fe757f8dc4
+      created: 1756325705890
+      modified: 1760315729488
+      sortKey: -1756325705890
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/estados"
+        name: GET /estados
+        meta:
+          id: req_c274eab17f2447bab6bcf67276b5ad35
+          created: 1756325705891
+          modified: 1760314681098
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705891
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("estadoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/estados/search?skip=0&take=10&nome=&uf=&codigoUf=&status=&orderBy=\
+          nome&orderDir=asc"
+        name: GET /estados/search
+        meta:
+          id: req_d2ae36aa2d214f668886219a8b321a83
+          created: 1756325705891
+          modified: 1760316021564
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705891
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("estadoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/estados"
+        name: POST /estados
+        meta:
+          id: req_e09466f64637485f89d2482dbbf86913
+          created: 1756325705891
+          modified: 1756325705891
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705891
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"codigoUf":35,"nome":"São Paulo","uf":"SP","regiao":3}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/estados/{{ _.estadoId }}"
+        name: GET /estados/{id}
+        meta:
+          id: req_060e3b310ee342e898a1b0acc12e3cbb
+          created: 1756325705892
+          modified: 1760316042207
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705892
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("estadoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/estados/{{ _.ids.estadoId }}"
+        name: PATCH /estados/{id}
+        meta:
+          id: req_e41bf37c48184ce3862e866df5e6a17b
+          created: 1756325705892
+          modified: 1756325705892
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705892
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nome":"Estado Editado"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/estados/{{ _.estadoId }}"
+        name: DELETE /estados/{id}
+        meta:
+          id: req_9fad4a98436143038635f0476a0f7c03
+          created: 1756325705893
+          modified: 1760313509637
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705893
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Municipios
+    meta:
+      id: fld_993f169ddb274b30a24d2366ccf3ac21
+      created: 1756325705893
+      modified: 1756325705893
+      sortKey: -1756325705893
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/municipios"
+        name: POST /municipios
+        meta:
+          id: req_6a5f972bbe7d4fbcb03b19902d2d942f
+          created: 1756325705893
+          modified: 1756325705893
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705893
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"nome":"Cidade X","codigo":3550308,"uf":"SP"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/municipios/search?skip=0&take=10&nome=&uf=&codigo=&status=&orderBy\
+          =nome&orderDir=asc"
+        name: GET /municipios/search
+        meta:
+          id: req_6a6e9a43efa4408b8f3cb77cdc8b7465
+          created: 1756325705894
+          modified: 1760316065578
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705894
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("municipioId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/municipios"
+        name: GET /municipios
+        meta:
+          id: req_98a70f3bce454dc9a7ce781e75359ec6
+          created: 1756325705894
+          modified: 1760314701231
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705894
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("municipioId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/municipios/{{ _.municipioId }}"
+        name: PATCH /municipios/{id}
+        meta:
+          id: req_9091732ddaec4f42b2434b777f1bf690
+          created: 1756325705895
+          modified: 1760313500799
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705895
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nome":"Cidade Y"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/municipios/{{ _.municipioId }}"
+        name: GET /municipios/{id}
+        meta:
+          id: req_c78337ccc7224b38bc8aaad6f40c798e
+          created: 1756325705895
+          modified: 1760316073111
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705895
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("municipioId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/municipios/{{ _.municipioId }}"
+        name: DELETE /municipios/{id}
+        meta:
+          id: req_8778bfac72d4400ab6c823080bc9abba
+          created: 1756325705896
+          modified: 1760313486255
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705896
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Itens
+    meta:
+      id: fld_83f9c69cdd644fb992bc9e6994b1c8ea
+      created: 1756325705896
+      modified: 1760315735863
+      sortKey: -1756325705896
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/itens"
+        name: POST /itens
+        meta:
+          id: req_34d22ac9b468489592c3a8506455a66e
+          created: 1756325705897
+          modified: 1756325705897
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705897
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"codigo":"SERV001","nomenclatura":"Item X","unidade":"h"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/itens"
+        name: GET /itens
+        meta:
+          id: req_3a20c27dac9a4716940a969e961243b7
+          created: 1756325705897
+          modified: 1760314715307
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705897
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("itemId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/itens/preco?itemId={{ _.itemId }}&estadoId={{ _.estadoId
+          }}"
+        name: GET /itens/preco
+        meta:
+          id: req_b9e24daea1d24ff7a937bf3428224af3
+          created: 1756325705898
+          modified: 1760313474972
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705898
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/itens/search?skip=0&take=10&codigo=&nomenclatura=&unidade=&status=\
+          &orderBy=codigo&orderDir=asc"
+        name: GET /itens/search
+        meta:
+          id: req_d00ea6d237a84089920f6fd6253a6789
+          created: 1756325705898
+          modified: 1760316085477
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705898
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("itemId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/itens/{{ _.itemId }}"
+        name: PATCH /itens/{id}
+        meta:
+          id: req_22f67d7df46e479195220d4a04023236
+          created: 1756325705899
+          modified: 1760313461345
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705899
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"nomenclatura":"Item X Edit"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/itens/{{ _.itemId }}"
+        name: GET /itens/{id}
+        meta:
+          id: req_600ad0b7099e40638f97c929821a13f0
+          created: 1756325705899
+          modified: 1760316122217
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705899
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("itemId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/itens/{{ _.itemId }}"
+        name: DELETE /itens/{id}
+        meta:
+          id: req_1b47267d151445d987a5324a3e0e3e93
+          created: 1756325705900
+          modified: 1760313446902
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705900
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Precos
+    meta:
+      id: fld_bf85e5571e17415f8db84be6b0605883
+      created: 1756325705900
+      modified: 1756325705900
+      sortKey: -1756325705900
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/precos"
+        name: GET /precos
+        meta:
+          id: req_d375e77224eb4fed9b3779f20d9b7ecc
+          created: 1756325705901
+          modified: 1760314728614
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705901
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("precoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/precos/search?skip=0&take=10&itemId=&estadoId=&valorMin=&valorMax=\
+          &status=&orderBy=valor&orderDir=asc"
+        name: GET /precos/search
+        meta:
+          id: req_de5723e1eedd4c5fa104e1b901b53861
+          created: 1756325705901
+          modified: 1760316131791
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705901
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("precoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/precos"
+        name: POST /precos
+        meta:
+          id: req_e315cce75178492e9cbc57f9badceb87
+          created: 1756325705901
+          modified: 1760314084841
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705901
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"itemId":"{{ _.itemId }}","estadoId":"{{ _.estadoId }}","valor":100.5}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/precos/{{ _.precoId }}"
+        name: DELETE /precos/{id}
+        meta:
+          id: req_0ae6d14456954dcd8bd7adcd71234cb7
+          created: 1756325705902
+          modified: 1760313433618
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705902
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/precos/{{ _.precoId }}"
+        name: GET /precos/{id}
+        meta:
+          id: req_be52a81cf7074a2e876d917c538cc18d
+          created: 1756325705902
+          modified: 1760316140320
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705902
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("precoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/precos/{{ _.precoId }}"
+        name: PATCH /precos/{id}
+        meta:
+          id: req_e6c72f14f3ee444e8ee8dc3f484073c5
+          created: 1756325705902
+          modified: 1760313422699
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705902
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"valor":150.75}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Projetos
+    meta:
+      id: fld_35cb46a9460a4a7bb464a1e7682b78dc
+      created: 1756325705903
+      modified: 1760315743459
+      sortKey: -1756325705903
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/projetos"
+        name: POST /projetos
+        meta:
+          id: req_088f8b16b78240c0ad3d60efb8cac773
+          created: 1756325705903
+          modified: 1760314049949
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705903
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"clienteId":"{{ _.clienteId }}","estadoId":"{{ _.estadoId
+            }}","nome":"Projeto A"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url
+          }}/projetos/search?skip=0&take=10&usuarioId=&clienteId=&nome=&valorMi\
+          n=&valorMax=&status=&orderBy=nome&orderDir=asc"
+        name: GET /projetos/search
+        meta:
+          id: req_0e7a8013167a4f0b8937da90fd556773
+          created: 1756325705904
+          modified: 1760316154991
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705904
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projetos"
+        name: GET /projetos
+        meta:
+          id: req_e4a83d4deb3e460491b4d0c51ebb6a99
+          created: 1756325705904
+          modified: 1760314745545
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705904
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projetos/{{ _.projetoId }}"
+        name: PATCH /projetos/{id}
+        meta:
+          id: req_0f0a657cb49e40a585c0dd04fee0933e
+          created: 1756325705905
+          modified: 1760313407095
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705905
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"status":"CONCLUIDO"}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projetos/{{ _.projetoId }}"
+        name: GET /projetos/{id}
+        meta:
+          id: req_7ad5946e1f4d469a9b69be869ab1f596
+          created: 1756325705905
+          modified: 1760316148189
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705905
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projetos/{{ _.projetoId }}"
+        name: DELETE /projetos/{id}
+        meta:
+          id: req_f4da1709d1fd4013bdd355aae7b40bf2
+          created: 1756325705905
+          modified: 1760313395511
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705905
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Projeto Itens
+    meta:
+      id: fld_7f7ed9cfc47d4bb88f636578d132c1ff
+      created: 1756325705906
+      modified: 1760316191538
+      sortKey: -1756325705906
+      description: ""
+    children:
+      - url: "{{ _.base_url }}/projeto-itens"
+        name: GET /projeto-itens
+        meta:
+          id: req_854ec3de0ef04d168385c7afdc4b4193
+          created: 1756325705906
+          modified: 1760314768603
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705906
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoItemId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projeto-itens"
+        name: POST /projeto-itens
+        meta:
+          id: req_ede91b224da74d9db8620e3f8e051923
+          created: 1756325705906
+          modified: 1760314019098
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705906
+        method: POST
+        body:
+          mimeType: application/json
+          text: '{"projetoId":"{{ _.projetoId }}","itemId":"{{ _.itemId
+            }}","quantidade":2, "preco": 10.0}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoItemId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projeto-itens/search?skip=0&take=10&projetoId{{
+          _.projetoItemId
+          }}&itemId=&quantidade=&status=&orderBy=quantidade&orderDir=asc"
+        name: GET /projeto-itens/search
+        meta:
+          id: req_17b900bc561a44efa28574ebfc150edf
+          created: 1756325705907
+          modified: 1760316163478
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705907
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoItemId", response[0].id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projeto-itens/{{ _.projetoItemId }}"
+        name: GET /projeto-itens/{id}
+        meta:
+          id: req_ac10417d76044221b19fab160c1d3184
+          created: 1756325705907
+          modified: 1760316169039
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705907
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        scripts:
+          afterResponse: |-
+            const response = JSON.parse(insomnia.response.text());
+            insomnia.environment.set("projetoItemId", response.id);
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projeto-itens/{{ _.projetoItemId }}"
+        name: DELETE /projeto-itens/{id}
+        meta:
+          id: req_b8e7cd10ba5d44e1a2c2b57cfced675c
+          created: 1756325705908
+          modified: 1760313366856
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705908
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/projeto-itens/{{ _.projetoItemId }}"
+        name: PATCH /projeto-itens/{id}
+        meta:
+          id: req_d01557fb787b4263aba04c41e2db4f0a
+          created: 1756325705908
+          modified: 1760313353303
+          isPrivate: false
+          description: ""
+          sortKey: -1756325705908
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: '{"quantidade":5}'
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _.token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_78488b7d517ddbf5c7c30e6b3f1c22dd67b4d927
+    created: 1756325553909
+    modified: 1760316191532
+environments:
+  name: Base Environment
+  meta:
+    id: env_78488b7d517ddbf5c7c30e6b3f1c22dd67b4d927
+    created: 1756325553908
+    modified: 1760316191537
+    isPrivate: false
+  data:
+    base_url: http://localhost:5000
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM0YWVkZjVmLWVmNmMtNDdkZS04M2U1LTQyYmM0YmZkMGIxZSIsImVtYWlsIjoiZGlvZ2VuZXMuZG9ybmVsbGVzQGdtYWlsLmNvbSIsImZ1bmNhbyI6IkFETUlOIiwiY3BmIjoiMDA0ODAxNzEwODQiLCJpYXQiOjE3NjAzMTU3MDMsImV4cCI6MTc2MDQ4ODUwM30.Di4tO8NcWZEQS9OUufOJBezefWYmKIh1Vcxc2oXd5rY
+    bairroId: 15c9406d-000d-403e-a7f1-8580f71b1d28
+    enderecoId: 2cb209f3-32cf-4a3e-8853-c14fd9f3d28c
+    clienteId: 88ccd4c7-44ee-47db-9a7d-00750ae8aec0
+    estadoId: d4e7d671-4215-4865-bce4-74fbc36d849e
+    municipioId: c0dd23be-d2a5-4776-812a-c9e6631626e3
+    itemId: 80a4ff1e-7daf-486d-ad14-4c9c989ea0a4
+    precoId: e0e12581-8d75-4543-95ff-9fa2e36059bd
+    projetoId: 624cd2a3-d219-4d63-af02-f29d57109123
+    projetoItemId: ada3f109-82a2-4d7a-94ef-d85609e11f9f
