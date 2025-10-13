@@ -21,7 +21,7 @@ export class ProjetoResponseDto extends BaseResponseDto {
   @ApiProperty()
   nome: string;
 
-  @ApiProperty({ type: 'number', format: 'float', example: 1.5 })
+  @ApiProperty({ type: 'string', format: 'decimal', example: '2.2' })
   valorTotal: number;
 
   @ApiProperty({ required: false })
