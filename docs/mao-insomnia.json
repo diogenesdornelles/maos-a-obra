@@ -618,7 +618,7 @@
       "url": "{{ _.base_url }}/projeto-itens",
       "authentication": { "type": "bearer", "token": "{{ _.token }}" },
       "headers": [{ "name": "Content-Type", "value": "application/json" }],
-      "body": { "mimeType": "application/json", "text": "{\"projetoId\":\"{{ _.ids.projetoId }}\",\"itemId\":\"{{ _.ids.itemId }}\",\"quantidade\":2}" }
+      "body": { "mimeType": "application/json", "text": "{\"projetoId\":\"{{ _.ids.projetoId }}\",\"itemId\":\"{{ _.ids.itemId }}\",\"quantidade\":2,\"preco\":10.0}" }
     },
     {
       "_id": "req_pitem_list",
