@@ -2,4 +2,7 @@ import { DefaultFilters } from '../default';
 
 export interface BairrosFilterQuery extends DefaultFilters {
   nome?: string;
+  codigo?: string;
+  uf?: string;
+  status?: string; // 'true' ou 'false' como string
 }
