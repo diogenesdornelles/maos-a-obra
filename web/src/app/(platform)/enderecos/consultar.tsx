@@ -23,7 +23,7 @@ export default function EnderecosConsultarScreen() {
     useGetEnderecosBySearch({
       logradouro: filters?.logradouro,
       cep: filters?.cep,
-      numero: filters?.numero,
+      numero: String(filters?.numero) || undefined,
       take: 20,
     });
 
