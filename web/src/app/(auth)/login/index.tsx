@@ -63,6 +63,7 @@ export default function LoginScreen() {
               <InputLabel
                 label="Email"
                 value={value}
+                type='normal'
                 onChangeText={onChange}
                 placeholder="Digite seu email"
                 error={errors?.email?.message}
