@@ -1,18 +1,16 @@
-import { EnderecoProps } from '../enderecos/enderecos';
 
-export interface ClienteProps {
-  id: string;
-  criadoEm: string;
-  atualizadoEm: string;
-  enderecoId: string;
+import { BaseProps } from '../base';
+import { EnderecoProps } from '../enderecos/enderecos';
+export interface ClienteProps extends BaseProps {
+  enderecoId?: string | null;
   usuarioId: string;
   nome: string;
-  sobrenome: string;
-  cpf: string;
-  cnpj: string;
-  nascimento: string;
-  telefone: string;
-  email: string;
-  status: boolean;
-  endereco: EnderecoProps;
+  sobrenome?: string | null;
+  cpf?: string | null;
+  cnpj?: string | null;
+  nascimento?: string | null;
+  telefone?: string | null;
+  email?: string | null;
+  endereco?: EnderecoProps | null;
+  status?: boolean;
 }
