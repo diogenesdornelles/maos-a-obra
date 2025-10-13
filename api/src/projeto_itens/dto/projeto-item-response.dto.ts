@@ -23,13 +23,13 @@ export class ProjetoItemResponseDto extends BaseResponseDto {
   @ApiProperty({ example: 'm3' })
   unidade: string;
 
-  @ApiProperty({ type: 'number', format: 'decimal', example: 2.2 })
+  @ApiProperty({ type: 'string', format: 'decimal', example: '2.2' })
   preco: number;
 
-  @ApiProperty({ type: 'number', format: 'float', example: 1.5 })
+  @ApiProperty({ type: 'string', format: 'decimal', example: '2.2' })
   valorTotal: number;
 
-  @ApiProperty({ type: 'number', format: 'float', example: 1.5 })
+  @ApiProperty({ type: 'string', format: 'decimal', example: '2.2' })
   quantidade: number;
 
   @ApiProperty({ required: false, default: true })
