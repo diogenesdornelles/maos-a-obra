@@ -34,6 +34,18 @@ export class SearchProjetoItemDto extends BaseSearchDto {
   @Min(0, { message: 'quantidade deve ser maior ou igual a 0' })
   quantidade?: number;
 
+  @ApiPropertyOptional({
+    description: 'Preço mínimo (busca >= preco)',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber(
+    { allowNaN: false, allowInfinity: false },
+    { message: 'preço deve ser um número válido' },
+  )
+  @Min(0, { message: 'preço deve ser maior ou igual a 0' })
+  preco?: number;
+
   @ApiPropertyOptional({ description: 'Status ativo/inativo', type: 'boolean' })
   @IsOptional()
   @IsBooleanString({ message: 'status deve ser "true" ou "false"' })
