@@ -28,7 +28,7 @@ async function executeSqlFile(filePath: string) {
   }
 }
 
-async function executeSqlTriggers(sql: string) {
+async function executeRawSql(sql: string) {
   const commands: string[] = [];
   let currentCommand = '';
   let insideDollarQuote = false;
@@ -101,7 +101,7 @@ async function main() {
 
   try {
     console.log('Aplicando triggers de projeto/projeto_item...');
-    const triggerSql = `
+    const triggersSql = `
       DROP TRIGGER IF EXISTS trg_calc_projeto_item_snapshot_total ON "ProjetoItem";
       DROP FUNCTION IF EXISTS calc_projeto_item_snapshot_total();
       DROP TRIGGER IF EXISTS trg_refresh_projeto_valor_total_aiud ON "ProjetoItem";
@@ -157,8 +157,164 @@ async function main() {
       FOR EACH ROW
       EXECUTE FUNCTION refresh_projeto_valor_total();
     `;
-    await executeSqlTriggers(triggerSql);
+    await executeRawSql(triggersSql);
     console.log('Triggers aplicadas com sucesso.');
+    const functionsSql = `
+      DROP FUNCTION IF EXISTS create_projeto_item(DECIMAL, DECIMAL, UUID, UUID);
+
+      CREATE OR REPLACE FUNCTION create_projeto_item(
+          IN _quantidade DECIMAL(10,2),
+          IN _preco DECIMAL(10,2),
+          IN _projeto_id UUID, 
+          IN _item_id UUID
+      ) 
+      RETURNS VOID AS $$
+      DECLARE
+          _item_row itens%ROWTYPE;
+          _projeto_row projetos%ROWTYPE;
+      BEGIN
+          -- Valida quantidade
+          IF _quantidade <= 0 THEN
+              RAISE EXCEPTION 'Quantidade deve ser maior que 0: %', _quantidade;
+          END IF;
+
+          -- Valida preço
+          IF _preco < 0 THEN
+              RAISE EXCEPTION 'Preço não pode ser menor que 0: %', _preco;
+          END IF;
+
+          -- Valida item
+          SELECT * INTO _item_row FROM itens WHERE id = _item_id AND status = true;
+          IF _item_row.id IS NULL THEN
+              RAISE EXCEPTION 'Item não encontrado: %', _item_id;
+          END IF;
+
+          -- Valida projeto
+          SELECT * INTO _projeto_row FROM projetos WHERE id = _projeto_id AND status != 'CANCELADO';
+          IF _projeto_row.id IS NULL THEN
+              RAISE EXCEPTION 'Projeto não encontrado: %', _projeto_id;
+          END IF;
+          
+          -- Insere ou atualiza projeto_item
+          INSERT INTO projeto_itens (
+              projeto_id, 
+              item_id, 
+              quantidade, 
+              preco, 
+              codigo, 
+              nomenclatura, 
+              unidade
+          ) VALUES (
+              _projeto_id, 
+              _item_id, 
+              _quantidade, 
+              _preco, 
+              _item_row.codigo, 
+              _item_row.nomenclatura, 
+              _item_row.unidade
+          )
+          ON CONFLICT (projeto_id, item_id) 
+          DO UPDATE SET
+              quantidade = projeto_itens.quantidade + EXCLUDED.quantidade,
+              preco = EXCLUDED.preco,
+              atualizado_em = CURRENT_TIMESTAMP;
+          
+      END; 
+      $$ LANGUAGE plpgsql;
+
+
+      DROP FUNCTION IF EXISTS update_projeto_item(UUID, DECIMAL, DECIMAL, UUID, UUID);
+
+      CREATE OR REPLACE FUNCTION update_projeto_item(
+          IN _projeto_item_id UUID,
+          IN _quantidade DECIMAL(10,2) DEFAULT NULL,
+          IN _preco DECIMAL(10,2) DEFAULT NULL,
+          IN _projeto_id UUID DEFAULT NULL, 
+          IN _item_id UUID DEFAULT NULL
+      ) 
+      RETURNS VOID AS $$
+      DECLARE
+          _quantidade_final DECIMAL(10,2);
+          _preco_final DECIMAL(10,2);
+          _item_row itens%ROWTYPE;
+          _projeto_item_row projeto_itens%ROWTYPE;
+          _projeto_row projetos%ROWTYPE;
+          _projeto_id_final UUID;
+          _item_id_final UUID;
+      BEGIN
+          -- Busca o projeto_item existente
+          SELECT * INTO _projeto_item_row 
+          FROM projeto_itens 
+          WHERE id = _projeto_item_id AND status = true;
+
+          IF _projeto_item_row.id IS NULL THEN
+              RAISE EXCEPTION 'Projeto item não encontrado: %', _projeto_item_id;
+          END IF;
+
+          -- Define quantidade final (usa a existente se não fornecida)
+          IF _quantidade IS NOT NULL AND _quantidade > 0 THEN
+              _quantidade_final := _quantidade;
+          ELSE 
+              _quantidade_final := _projeto_item_row.quantidade;
+          END IF;
+
+          -- Define preço final (usa o existente se não fornecido)
+          IF _preco IS NOT NULL THEN
+              IF _preco < 0 THEN
+                  RAISE EXCEPTION 'Preço não pode ser menor que 0: %', _preco;
+              END IF;
+              _preco_final := _preco;
+          ELSE
+              _preco_final := _projeto_item_row.preco;
+          END IF;
+
+          -- Define item_id final
+          IF _item_id IS NOT NULL THEN
+              SELECT * INTO _item_row FROM itens WHERE id = _item_id AND status = true;
+              IF _item_row.id IS NULL THEN
+                  RAISE EXCEPTION 'Item não encontrado: %', _item_id;
+              END IF;
+              _item_id_final := _item_id;
+          ELSE
+              SELECT * INTO _item_row FROM itens WHERE id = _projeto_item_row.item_id;
+              _item_id_final := _projeto_item_row.item_id;
+          END IF;
+
+          -- Define projeto_id final
+          IF _projeto_id IS NOT NULL THEN
+              SELECT * INTO _projeto_row FROM projetos 
+              WHERE id = _projeto_id AND status != 'CANCELADO';
+              
+              IF _projeto_row.id IS NULL THEN
+                  RAISE EXCEPTION 'Projeto não encontrado ou cancelado: %', _projeto_id;
+              END IF;
+              _projeto_id_final := _projeto_id;
+          ELSE
+              SELECT * INTO _projeto_row FROM projetos WHERE id = _projeto_item_row.projeto_id;
+              _projeto_id_final := _projeto_item_row.projeto_id;
+          END IF;
+          
+          -- Atualiza o projeto_item
+          UPDATE projeto_itens 
+          SET 
+              projeto_id = _projeto_id_final,
+              item_id = _item_id_final,
+              quantidade = _quantidade_final,
+              preco = _preco_final,
+              codigo = _item_row.codigo,
+              nomenclatura = _item_row.nomenclatura,
+              unidade = _item_row.unidade,
+              atualizado_em = CURRENT_TIMESTAMP
+          WHERE id = _projeto_item_id;
+          
+      END; 
+      $$ LANGUAGE plpgsql;
+    `;
+    await executeRawSql(functionsSql);
+    console.log('Funções aplicadas com sucesso.');
+    const dataSeed = `
+    
+    `;
   } catch (error) {
     console.error('Erro ao aplicar triggers:', error);
     throw error;
