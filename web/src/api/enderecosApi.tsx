@@ -27,4 +27,12 @@ export const enderecosApi = {
 
     return data;
   },
+
+  getEnderecoById: async (id: string) => {
+    const data = await restClient.get<EnderecoProps>(
+      `/enderecos/${id}`
+    );
+
+    return data;
+  },
 };
