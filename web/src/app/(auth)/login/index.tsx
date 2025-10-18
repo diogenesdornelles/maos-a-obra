@@ -1,10 +1,10 @@
-import { InputLabel } from '@/components/InputLabel/InputLabel';
+import { InputText } from '@/components/Inputs/InputText';
 import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { signIn } from '@/contexts/authStore';
 import { LoginFormData, loginSchema } from '@/features/(auth)/login/validations/loginForm';
 import { usePostLogin } from '@/hooks/queries/auth/usePostLogin';
+import { useSession } from '@/hooks/useSession';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const { signIn } = useSession();
 
   const { mutate } = usePostLogin();
 
@@ -34,7 +35,7 @@ export default function LoginScreen() {
           signIn(token?.access_token);
           router.replace('/(platform)/home');
         },
-        onError: () => {
+        onError: (err) => {
           setIsOpenModal(true);
         },
       }
@@ -60,10 +61,9 @@ export default function LoginScreen() {
             control={control}
             name="email"
             render={({ field: { onChange, value } }) => (
-              <InputLabel
+              <InputText
                 label="Email"
                 value={value}
-                type='normal'
                 onChangeText={onChange}
                 placeholder="Digite seu email"
                 error={errors?.email?.message}
@@ -74,7 +74,7 @@ export default function LoginScreen() {
             control={control}
             name="password"
             render={({ field: { onChange, value } }) => (
-              <InputLabel
+              <InputText
                 secureTextEntry={true}
                 label="Senha"
                 value={value}
