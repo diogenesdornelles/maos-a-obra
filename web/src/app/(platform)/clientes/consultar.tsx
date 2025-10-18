@@ -24,25 +24,16 @@ export default function ClientesConsultarScreen() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetClientesBySearch({
       nome: filters?.nome,
-      cpf: filters?.cpf,
-      cnpj: filters?.cnpj,
+      cpf: filters?.cnpj,
       email: filters?.email,
+      cnpj: filters?.cnpj,
       take: 20,
     });
 
   const clientes = useMemo(() => data?.pages.flatMap((page) => page) ?? [], [data]);
 
-  function sanitizeFilters() {
-    return {
-      nome: nome.trim().length > 0 ? nome.trim() : '',
-      cpf: cpf.trim().length > 0 ? cpf.trim() : '',
-      cnpj: cnpj.trim().length > 0 ? cnpj.trim() : '',
-      email: email.trim().length > 0 ? email.trim() : '',
-    };
-  }
-
   function onSubmit() {
-    setFilters(sanitizeFilters());
+    setFilters({ cnpj, cpf, email, nome });
   }
 
   return (
@@ -52,28 +43,17 @@ export default function ClientesConsultarScreen() {
         <View className="pb-2">
           <InputText
             label="Nome"
-            placeholder="Digite o nome"
+            placeholder="Digite nome do cliente"
             onChangeText={setNome}
             value={nome}
           />
-          <InputText
-            label="CPF"
-            placeholder="Digite o CPF"
-            onChangeText={setCpf}
-            value={cpf}
-          />
-          <InputText
-            label="CNPJ"
-            placeholder="Digite o CNPJ"
-            onChangeText={setCnpj}
-            value={cnpj}
-          />
+          <InputText label="CPF" placeholder="Digite o cpf" onChangeText={setCpf} value={cpf} />
+          <InputText label="CNPJ" placeholder="Digite o cnpj" onChangeText={setCnpj} value={cnpj} />
           <InputText
             label="Email"
             placeholder="Digite o email"
             onChangeText={setEmail}
             value={email}
-            keyboardType="email-address"
           />
         </View>
 
@@ -107,8 +87,7 @@ export default function ClientesConsultarScreen() {
                   )}
                   {item?.endereco?.logradouro && (
                     <Text className="text-sm text-muted-foreground">
-                      Endereço: {item?.endereco?.logradouro}
-                      {item?.endereco?.numero ? `, ${item?.endereco?.numero}` : ''}
+                      Logradouro: {item?.endereco?.logradouro}
                     </Text>
                   )}
                 </View>
