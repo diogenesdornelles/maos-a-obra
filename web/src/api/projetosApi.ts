@@ -34,5 +34,6 @@ export const projetosApi = {
     );
 
    return data;
-},
+  },
 };
+
