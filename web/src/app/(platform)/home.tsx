@@ -3,7 +3,7 @@ import { CardMenuProps } from '@/components/ListMenu/CardMenu';
 import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { signOut } from '@/contexts/authStore';
+import { useSession } from '@/hooks/useSession';
 import { router, Stack } from 'expo-router';
 import {
   Calculator,
@@ -20,6 +20,7 @@ import { View } from 'react-native';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { signOut } = useSession();
 
   const menu: CardMenuProps[] = [
     {
@@ -36,7 +37,13 @@ export default function Home() {
         setIsModalOpen(true);
       },
     },
-    { label: 'Perfil', icon: User, onPress: () => router.push('/(platform)/perfil') },
+    {
+      label: 'Perfil',
+      icon: User,
+      onPress: () => {
+        router.push('/(platform)/me');
+      },
+    },
     {
       label: 'Clientes',
       icon: Users,
@@ -68,8 +75,8 @@ export default function Home() {
     {
       label: 'Logout',
       icon: LogOut,
-      onPress: () => {
-        signOut();
+      onPress: async () => {
+        await signOut();
         router.replace('/');
       },
     },
