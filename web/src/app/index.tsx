@@ -1,26 +1,35 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { getSession, restoreSession, validateToken } from '@/contexts/authStore';
-import { Redirect, router, Stack } from 'expo-router';
+import { useSession } from '@/hooks/useSession';
+import { router, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function InitialScreen() {
-  const session = getSession();
+  const { getSession, restoreSession } = useSession();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function init() {
-      await restoreSession();
-      setLoading(false);
+      try {
+        await restoreSession();
+
+        const session = getSession();
+
+        if (session?.token) {
+          router.replace('/(platform)/home');
+          return;
+        }
+      } catch (error) {
+        console.error('Error restoring session:', error);
+      } finally {
+        setLoading(false);
+      }
     }
+
     init();
   }, []);
-
-  if (!loading && session?.token && validateToken(session.token)) {
-    return <Redirect href="/(platform)/home" />;
-  }
 
   if (loading) {
     return (
@@ -41,10 +50,10 @@ export default function InitialScreen() {
           </View>
         </SafeAreaView>
         <View className="h-[300px] justify-center gap-5 bg-gray-300 px-5">
-          <Button variant="default" onPress={() => router.replace('/(auth)/login')}>
+          <Button variant="default" onPress={() => router.push('/(auth)/login')}>
             <Text>Login</Text>
           </Button>
-          <Button variant="default" onPress={() => router.replace('/(auth)/signUp')}>
+          <Button variant="default" onPress={() => router.push('/(auth)/signUp')}>
             <Text>Registrar</Text>
           </Button>
         </View>
