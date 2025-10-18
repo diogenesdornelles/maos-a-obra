@@ -3,21 +3,31 @@ import { Select, SelectOption } from '@/components/Inputs/Select';
 import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import {
+  AddEnderecoFormData,
+  addEnderecoSchema,
+} from '@/features/(platform)/enderecos/adicionar/validations/addEnderecoForm';
 import { useGetBairrosBySearch } from '@/hooks/queries/bairros/useGetBairrosBySearch';
 import { usePostCreateEndereco } from '@/hooks/queries/enderecos/usePostCreateEndereco';
 import { useDebounce } from '@/hooks/useDebounce';
+import { ErrorResponse } from '@/types/errorParser';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { TouchableOpacity, View } from 'react-native';
 
 export default function EnderecosAdicionarScreen() {
-  const [bairro, setBairro] = useState('');
-  const [logradouro, setLogradouro] = useState('');
-  const [numeroCasa, setNumeroCasa] = useState('');
-  const [cep, setCep] = useState('');
-  const [complemento, setComplemento] = useState('');
+  const [errorModal, setErrorModal] = useState<ErrorResponse>();
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<AddEnderecoFormData>({
+    resolver: zodResolver(addEnderecoSchema),
+    mode: 'onChange',
+  });
 
   const [bairroSearch, setBairroSearch] = useState('');
 
@@ -47,45 +57,30 @@ export default function EnderecosAdicionarScreen() {
     );
   }, [data]);
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!bairro.trim()) {
-      newErrors.bairro = 'Campo obrigatório';
-    }
-
-    if (!logradouro.trim()) {
-      newErrors.logradouro = 'Campo obrigatório';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      mutate(
-        {
-          bairroId: bairro,
-          cep: cep?.length < 1 ? null : cep,
-          complemento: complemento?.length < 1 ? null : complemento,
-          logradouro,
-          numero: numeroCasa?.length < 1 ? null : numeroCasa,
-          pais: 'Brasil',
-          status: true,
+  const onSubmit = (formData: AddEnderecoFormData) => {
+    mutate(
+      {
+        bairroId: formData?.bairroId,
+        cep: formData?.cep,
+        complemento: formData?.complemento,
+        logradouro: formData?.logradouro,
+        numero: formData?.numero,
+        pais: 'Brasil',
+        status: true,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(true);
+          setModalType('success');
         },
-        {
-          onSuccess: () => {
-            setIsOpen(true);
-            setModalType('success');
-          },
-          onError: (erro) => {
-            setIsOpen(true);
-            setModalType('error');
-          },
-        }
-      );
-    }
+        onError: (erro) => {
+          console.log(erro);
+          setErrorModal(erro as unknown as ErrorResponse);
+          setIsOpen(true);
+          setModalType('error');
+        },
+      }
+    );
   };
 
   const modalInfo = {
@@ -96,12 +91,6 @@ export default function EnderecosAdicionarScreen() {
         <View className="flex w-full flex-row items-end justify-end gap-2">
           <Button
             onPress={() => {
-              setBairro('');
-              setLogradouro('');
-              setNumeroCasa('');
-              setCep('');
-              setComplemento('');
-              setBairroSearch('');
               setIsOpen(false);
             }}>
             <Text>Continuar</Text>
@@ -116,8 +105,8 @@ export default function EnderecosAdicionarScreen() {
       ),
     },
     error: {
-      title: 'Houve um erro.',
-      description: 'Não foi possível adicionar o endereço.',
+      title: 'Erro ao adicionar.',
+      description: errorModal?.data?.message,
       footer: (
         <View className="flex w-full flex-row items-end justify-end">
           <Button
@@ -135,79 +124,107 @@ export default function EnderecosAdicionarScreen() {
     <>
       <Stack.Screen options={{ headerTitle: 'Endereços / adicionar' }} />
       <View className="p-5">
-        <Select
-          label="Bairro"
-          isRequired
-          value={bairro}
-          labelModalSearch="Selecionar bairro"
-          options={bairrosOptions}
-          onValueChange={(value) => setBairro(value)}
-          renderItem={(item, isSelected, onSelect) => {
-            const [bairroItem, cidadeItem] = item?.label?.split(' -');
-            return (
-              <TouchableOpacity
-                onPress={onSelect}
-                className={`py-3 ${isSelected ? 'bg-accent' : ''}`}>
-                <View className="flex items-center justify-center">
-                  <Text className={`text-base ${isSelected ? 'font-bold' : 'font-medium'}`}>
-                    {bairroItem}
-                  </Text>
-                  {item.data && (
-                    <Text className="text-sm text-muted-foreground">
-                      Cidade: {cidadeItem || 'N/A'}
-                    </Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          error={errors.bairro}
-          isLoading={isLoading}
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage}
-          onLoadMore={fetchNextPage}
-          onSearchChange={setBairroSearch}
+        <Controller
+          control={control}
+          name="bairroId"
+          render={({ field: { onChange, value } }) => (
+            <Select
+              label="Bairro"
+              isRequired
+              value={value}
+              labelModalSearch="Selecionar bairro"
+              options={bairrosOptions}
+              onValueChange={onChange}
+              renderItem={(item, isSelected, onSelect) => {
+                const [bairroItem, cidadeItem] = item?.label?.split(' -');
+                return (
+                  <TouchableOpacity
+                    onPress={onSelect}
+                    className={`py-3 ${isSelected ? 'bg-accent' : ''}`}>
+                    <View className="flex items-center justify-center">
+                      <Text className={`text-base ${isSelected ? 'font-bold' : 'font-medium'}`}>
+                        {bairroItem}
+                      </Text>
+                      {item.data && (
+                        <Text className="text-sm text-muted-foreground">
+                          Cidade: {cidadeItem || 'N/A'}
+                        </Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                );
+              }}
+              error={errors.bairroId?.message}
+              isLoading={isLoading}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              onLoadMore={fetchNextPage}
+              onSearchChange={setBairroSearch}
+            />
+          )}
         />
 
-        <InputText
-          label="Logradouro"
-          isRequired
-          placeholder="Digite o logradouro"
-          onChangeText={(text) => {
-            setLogradouro(text);
-            if (errors.logradouro) {
-              setErrors((prev) => ({ ...prev, logradouro: '' }));
-            }
-          }}
-          value={logradouro}
-          error={errors.logradouro}
+        <Controller
+          control={control}
+          name="logradouro"
+          render={({ field: { onChange, value } }) => (
+            <InputText
+              label="Logradouro"
+              isRequired
+              placeholder="Digite o logradouro"
+              onChangeText={onChange}
+              value={value}
+              error={errors.logradouro?.message}
+            />
+          )}
         />
 
-        <InputText
-          label="Número"
-          placeholder="Digite o número"
-          keyboardType="numeric"
-          value={numeroCasa}
-          onChangeText={setNumeroCasa}
+        <Controller
+          control={control}
+          name="numero"
+          render={({ field: { onChange, value } }) => (
+            <InputText
+              label="Número"
+              placeholder="Digite o número"
+              keyboardType="numeric"
+              value={value}
+              onChangeText={onChange}
+              error={errors?.numero?.message}
+            />
+          )}
         />
 
-        <InputText
-          label="CEP"
-          placeholder="Digite o CEP"
-          keyboardType="numeric"
-          value={cep ?? undefined}
-          onChangeText={setCep}
+        <Controller
+          control={control}
+          name="cep"
+          render={({ field: { onChange, value } }) => (
+            <InputText
+              label="CEP"
+              placeholder="Digite o CEP"
+              keyboardType="numeric"
+              value={value}
+              onChangeText={onChange}
+              error={errors?.cep?.message}
+            />
+          )}
         />
 
-        <InputText
-          label="Complemento"
-          placeholder="Digite algum complemento"
-          value={complemento}
-          onChangeText={setComplemento}
+        <Controller
+          control={control}
+          name="complemento"
+          render={({ field: { onChange, value } }) => (
+            <InputText
+              label="Complemento"
+              placeholder="Digite algum complemento"
+              value={value}
+              onChangeText={onChange}
+              error={errors?.complemento?.message}
+            />
+          )}
         />
 
         <View className="pt-5">
-          <Button onPress={handleSubmit}>
+          <Button onPress={handleSubmit(onSubmit)} disabled={!isValid}>
             <Text>Salvar</Text>
           </Button>
         </View>
