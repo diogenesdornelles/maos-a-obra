@@ -18,6 +18,6 @@ export const useGetEstadosBySearch = (filters?: Omit<EstadosFilterQuery, 'skip'>
       return lastPageParam + (filters?.take || 20);
     },
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 20,
   });
 };
