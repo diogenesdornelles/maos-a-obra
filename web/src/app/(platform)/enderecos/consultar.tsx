@@ -23,25 +23,14 @@ export default function EnderecosConsultarScreen() {
     useGetEnderecosBySearch({
       logradouro: filters?.logradouro,
       cep: filters?.cep,
-      numero: String(filters?.numero) || '',
+      numero: filters?.numero,
       take: 20,
     });
 
   const enderecos = useMemo(() => data?.pages.flatMap((page) => page) ?? [], [data]);
 
-  function sanitizeFilters() {
-    const sanitizedCep = cep.trim();
-    const sanitizedNumero = numeroCasa.trim();
-
-    return {
-      logradouro: logradouro?.trim()?.length > 0 ? logradouro.trim() : '',
-      cep: sanitizedCep.length === 8 ? sanitizedCep : '',
-      numero: sanitizedNumero.length > 0 ? sanitizedNumero : '',
-    };
-  }
-
   function onSubmit() {
-    setFilters(sanitizeFilters());
+    setFilters({ cep, logradouro, numero: numeroCasa });
   }
 
   return (
@@ -60,7 +49,7 @@ export default function EnderecosConsultarScreen() {
             label="Número"
             placeholder="Digite o número da casa"
             onChangeText={setNumeroCasa}
-            value={numeroCasa ?? ''}
+            value={numeroCasa ?? undefined}
           />
         </View>
 
