@@ -10,11 +10,15 @@ import { EstadoProps } from '@/types/estados/estados';
 import { ItemProps } from '@/types/itens/itens';
 import { Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 
 export default function ClientesConsultarScreen() {
   const [itemSelected, setItemSelected] = useState('');
   const [estadoSelected, setEstadoSelected] = useState('');
+
+  const [apiItem, setApiItem] = useState('');
+  const [apiEstado, setApiEstado] = useState('');
+
   const [itemSearch, setItemSearch] = useState('');
   const [estadoSearch, setEstadoSearch] = useState('');
 
@@ -44,9 +48,8 @@ export default function ClientesConsultarScreen() {
   });
 
   const { data: itemPreco, isLoading: isLoadingItemPreco } = useGetItemPreco({
-    estadoId: estadoSelected,
-    itemId: itemSelected,
-    take: 20,
+    estadoId: apiEstado,
+    itemId: apiItem,
   });
 
   const itensOptions: SelectOption[] = useMemo(() => {
@@ -73,11 +76,14 @@ export default function ClientesConsultarScreen() {
     );
   }, [estados]);
 
-  function onSubmit() {}
+  function onSubmit() {
+    setApiEstado(estadoSelected);
+    setApiItem(itemSelected);
+  }
 
   return (
     <>
-      <Stack.Screen options={{ headerTitle: 'Consulta / itens' }} />
+      <Stack.Screen options={{ headerTitle: 'Consultas / itens' }} />
       <View className="m-5">
         <Select<ItemProps>
           label="Item"
@@ -140,24 +146,37 @@ export default function ClientesConsultarScreen() {
         </Button>
       </View>
 
-      <View className="w-full flex-1 px-5 pb-10">
-        <View className="py-3 shadow-sm">
-          <CardHeader className="gap-1">
-            <Text className="text-base font-semibold leading-snug">{itemPreco?.nomenclatura}</Text>
-          </CardHeader>
-          <CardContent className="gap-1">
-            {itemPreco?.codigo && (
-              <Text className="text-sm text-muted-foreground">Código: {itemPreco.codigo}</Text>
-            )}
-            {itemPreco?.unidade && (
-              <Text className="text-sm text-muted-foreground">Unidade: {itemPreco.unidade}</Text>
-            )}
-            {itemPreco?.valor && (
-              <Text className="text-sm text-muted-foreground">Valor: R$ {itemPreco.valor}</Text>
-            )}
-          </CardContent>
+      {itemPreco ? (
+        <View className="w-full flex-1 px-5 pb-10">
+          <View className="py-3 shadow-sm">
+            <CardHeader className="gap-1">
+              <Text className="text-base font-semibold leading-snug">
+                {itemPreco?.nomenclatura}
+              </Text>
+            </CardHeader>
+            <CardContent className="gap-1">
+              {itemPreco?.codigo && (
+                <Text className="text-sm text-muted-foreground">Código: {itemPreco.codigo}</Text>
+              )}
+              {itemPreco?.unidade && (
+                <Text className="text-sm text-muted-foreground">Unidade: {itemPreco.unidade}</Text>
+              )}
+              {itemPreco?.valor && (
+                <Text className="text-sm text-muted-foreground">Valor: R$ {itemPreco.valor}</Text>
+              )}
+            </CardContent>
+          </View>
         </View>
-      </View>
+      ) : isLoadingItemPreco ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" />
+          <Text className="mt-4">Carregando...</Text>
+        </View>
+      ) : (
+        <View className="flex flex-row justify-center">
+          <Text className="text-gray-400">Selecione as opções para buscar</Text>
+        </View>
+      )}
     </>
   );
 }
