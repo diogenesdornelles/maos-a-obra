@@ -1,4 +1,3 @@
-
 import { BaseProps } from '../base';
 import { EnderecoProps } from '../enderecos/enderecos';
 export interface ClienteProps extends BaseProps {
