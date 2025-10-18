@@ -18,6 +18,5 @@ export const useGetEnderecosBySearch = (filters?: Omit<EnderecosFilterQuery, 'sk
       return lastPageParam + (filters?.take || 20);
     },
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
   });
 };
