@@ -1,12 +1,24 @@
 import { ListMenu } from '@/components/ListMenu';
 import { CardMenuProps } from '@/components/ListMenu/CardMenu';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { CirclePlus, Search } from 'lucide-react-native';
 
 export default function ProjectScreen() {
   const menu: CardMenuProps[] = [
-    { label: 'Adicionar', icon: CirclePlus, onPress: () => {} },
-    { label: 'Consultar', icon: Search, onPress: () => {} },
+    {
+      label: 'Adicionar',
+      icon: CirclePlus,
+      onPress: () => {
+        router.push('/(platform)/projetos/adicionar');
+      },
+    },
+    {
+      label: 'Consultar',
+      icon: Search,
+      onPress: () => {
+        router.push('/(platform)/projetos/consultar');
+      },
+    },
   ];
   return (
     <>
