@@ -66,7 +66,7 @@ export default function ClientesAdicionarScreen() {
   const modalInfo = {
     success: {
       title: 'Cliente adicionado.',
-      description: 'Cliente foi adiciona com sucesso',
+      description: 'Cliente foi adicionado com sucesso',
       footer: (
         <View className="flex w-full flex-row items-end justify-end gap-2">
           <Button
