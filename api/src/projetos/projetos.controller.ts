@@ -82,6 +82,7 @@ export class ProjetosController {
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiQuery({ name: 'usuarioId', required: false, type: String })
   @ApiQuery({ name: 'clienteId', required: false, type: String })
+  @ApiQuery({ name: 'estadoId', required: false, type: String })
   @ApiQuery({ name: 'valorMin', required: false, type: Number })
   @ApiQuery({ name: 'valorMax', required: false, type: Number })
   @ApiQuery({ name: 'nome', required: false, type: String })
@@ -96,6 +97,7 @@ export class ProjetosController {
   async find(@Query() q: SearchProjetoDto, @Request() req: RequestWithUser) {
     const where: Prisma.ProjetoWhereInput = {};
     if (q.usuarioId) where.usuarioId = q.usuarioId;
+    if (q.estadoId) where.estadoId = q.estadoId;
     if (q.clienteId) where.clienteId = q.clienteId;
     if (q.nome) where.nome = { contains: q.nome, mode: 'insensitive' };
     if (q.valorMin !== undefined || q.valorMax !== undefined) {
