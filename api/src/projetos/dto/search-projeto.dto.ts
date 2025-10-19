@@ -18,6 +18,11 @@ export class SearchProjetoDto extends BaseSearchDto {
   @IsUUID('4', { message: 'usuarioId deve ser um UUID válido' })
   usuarioId?: string;
 
+  @ApiPropertyOptional({ description: 'ID do estado (UUID)', format: 'uuid' })
+  @IsOptional()
+  @IsUUID('4', { message: 'estadoId deve ser um UUID válido' })
+  estadoId?: string;
+
   @ApiPropertyOptional({ description: 'ID do cliente (UUID)', format: 'uuid' })
   @IsOptional()
   @IsUUID('4', { message: 'clienteId deve ser um UUID válido' })
