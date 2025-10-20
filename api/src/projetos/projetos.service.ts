@@ -27,7 +27,7 @@ export class ProjetosService {
     }
     const result = await this.prisma.projeto.create({
       data: { ...createProjetoDto, status: ProjetoStatus.EM_ANDAMENTO },
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
     return result;
   }
@@ -40,7 +40,7 @@ export class ProjetosService {
     this.logger.log(`Where ${JSON.stringify(where)}`);
     return await this.prisma.projeto.findMany({
       where,
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
   }
 
@@ -59,7 +59,7 @@ export class ProjetosService {
       cursor,
       where,
       orderBy,
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
   }
 
@@ -67,7 +67,7 @@ export class ProjetosService {
     this.logger.log(`Where ${JSON.stringify(where)}`);
     const projeto = await this.prisma.projeto.findUnique({
       where,
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
     if (!projeto) throw new NotFoundException(`Projeto not found`);
     return projeto;
@@ -93,7 +93,7 @@ export class ProjetosService {
     const result = await this.prisma.projeto.update({
       where,
       data: updateProjetoDto,
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
     return result;
   }
@@ -106,7 +106,7 @@ export class ProjetosService {
     return this.prisma.projeto.update({
       where,
       data: { status: 'CANCELADO' },
-      include: { cliente: true, itens: true },
+      include: { cliente: true, itens: true, estado: true },
     });
   }
 }
