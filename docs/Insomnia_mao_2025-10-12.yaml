@@ -1435,7 +1435,7 @@ collection:
             store: true
           rebuildPath: true
       - url: "{{ _.base_url
-          }}/projetos/search?skip=0&take=10&usuarioId=&clienteId=&nome=&valorMi\
+          }}/projetos/search?skip=0&take=10&usuarioId=&clienteId&estadoId=&nome=&valorMi\
           n=&valorMax=&status=&orderBy=nome&orderDir=asc"
         name: GET /projetos/search
         meta:
