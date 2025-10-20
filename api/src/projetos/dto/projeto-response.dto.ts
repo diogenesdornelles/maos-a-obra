@@ -2,9 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseResponseDto } from 'src/base-dtos/base-response.dto';
 import { ProjetoStatus } from './update-projeto.dto';
-import type { Cliente, ProjetoItem } from '@prisma/client';
+import type { Cliente, Estado, ProjetoItem } from '@prisma/client';
 import { ProjetoItemResponseDto } from 'src/projeto_itens/dto/projeto-item-response.dto';
 import { ClienteResponseDto } from 'src/clientes/dto/cliente-response.dto';
+import { EstadoResponseDto } from 'src/estados/dto/estado-response.dto';
 
 export class ProjetoResponseDto extends BaseResponseDto {
   @ApiProperty({
@@ -35,4 +36,7 @@ export class ProjetoResponseDto extends BaseResponseDto {
 
   @ApiProperty({ type: () => [ProjetoItemResponseDto] })
   itens: ProjetoItem[];
+
+  @ApiProperty({ type: () => EstadoResponseDto })
+  estado: Estado;
 }
