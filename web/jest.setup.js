@@ -87,3 +87,25 @@ jest.mock('@react-native-community/datetimepicker', () => {
 jest.mock('@/lib/utils', () => ({
   cn: (...classes) => classes.filter(Boolean).join(' '),
 }));
+
+jest.mock('expo-router', () => ({
+  router: {
+    replace: jest.fn(),
+    back: jest.fn(),
+    push: jest.fn(),
+    navigate: jest.fn(),
+  },
+  Stack: {
+    Screen: ({ children, ...props }) => null,
+  },
+  useRouter: () => ({
+    replace: jest.fn(),
+    back: jest.fn(),
+    push: jest.fn(),
+    navigate: jest.fn(),
+  }),
+  useSegments: () => [],
+  usePathname: () => '',
+  useLocalSearchParams: () => ({}),
+  useGlobalSearchParams: () => ({}),
+}));
