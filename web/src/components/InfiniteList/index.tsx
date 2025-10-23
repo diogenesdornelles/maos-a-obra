@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import { cn } from '@/lib/utils';
 import { FlashList } from '@shopify/flash-list';
 import { ActivityIndicator, View } from 'react-native';
 import { Separator } from '../ui/separator';
@@ -43,7 +42,7 @@ export function InfiniteList<T>({
     if (!isFetchingNextPage) return null;
 
     return (
-      <View className={cn(...className, 'h-96 w-full')}>
+      <View className="py-4">
         <ActivityIndicator size="small" />
       </View>
     );
@@ -64,21 +63,20 @@ export function InfiniteList<T>({
   }
 
   return (
-    <View className={className}>
-      <FlashList
-        data={data}
-        renderItem={({ item, index }) => renderItem(item, index)}
-        keyExtractor={
-          keyExtractor
-            ? (item, index) => keyExtractor(item, index)
-            : (item, index) => index.toString()
-        }
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={renderEmpty}
-        ListFooterComponent={renderFooter}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={onEndReachedThreshold}
-      />
-    </View>
+    <FlashList
+      data={data}
+      renderItem={({ item, index }) => renderItem(item, index)}
+      keyExtractor={
+        keyExtractor
+          ? (item, index) => keyExtractor(item, index)
+          : (item, index) => index.toString()
+      }
+      ItemSeparatorComponent={ItemSeparatorComponent}
+      ListEmptyComponent={renderEmpty}
+      ListFooterComponent={renderFooter}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={onEndReachedThreshold}
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+    />
   );
 }
