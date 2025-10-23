@@ -74,7 +74,6 @@ export default function EnderecosAdicionarScreen() {
           setModalType('success');
         },
         onError: (erro) => {
-          console.log(erro);
           setErrorModal(erro as unknown as ErrorResponse);
           setIsOpen(true);
           setModalType('error');
