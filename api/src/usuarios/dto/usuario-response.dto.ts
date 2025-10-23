@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponseDto } from 'src/base-dtos/base-response.dto';
+import { Funcao } from './create-usuario.dto';
 
 export class UsuarioResponseDto extends BaseResponseDto {
   @ApiProperty()
@@ -22,4 +23,11 @@ export class UsuarioResponseDto extends BaseResponseDto {
 
   @ApiProperty({ required: false, default: true })
   status?: boolean;
+
+  @ApiProperty({
+    description: 'Função do usuário',
+    enum: Funcao,
+    example: Funcao.COMUM,
+  })
+  funcao?: Funcao;
 }
