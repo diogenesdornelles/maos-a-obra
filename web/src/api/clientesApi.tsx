@@ -2,6 +2,7 @@ import { restClient } from '@/services/restClient';
 import { ClienteProps } from '@/types/clientes/clientes';
 import { CreateCliente, CreatedCliente } from '@/types/clientes/create';
 import { ClientesFilterQuery } from '@/types/clientes/filtersQuery';
+import { UpdateCliente } from '@/types/clientes/update';
 
 export const clientesApi = {
   createCliente: async (body: CreateCliente) => {
@@ -29,6 +30,16 @@ export const clientesApi = {
       `/clientes/${id}`
     );
 
+    return data;
+  },
+
+  updateCliente: async (body: UpdateCliente) => {
+    const data = await restClient.patch<CreatedCliente>(`/clientes`, body);
+    return data;
+  },
+
+  deleteCliente: async (id: string) => {
+    const data = await restClient.delete<CreatedCliente>(`/clientes/${id}`);
     return data;
   },
 };
