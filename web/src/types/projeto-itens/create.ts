@@ -1,10 +1,10 @@
-import { BaseProps } from "../base";
+import { BaseProps } from '../base';
 
 export interface CreateProjetoItem {
   projetoId: string;
   itemId: string;
-  quantidade?: number; // default 1.0
-  preco?: number; // default 0.0
+  quantidade?: number;
+  preco?: number;
   status?: boolean;
 }
 
