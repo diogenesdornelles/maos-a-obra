@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import type { Projeto } from '@prisma/client';
 import { BaseResponseDto } from 'src/base-dtos/base-response.dto';
 import { ProjetoResponseDto } from 'src/projetos/dto/projeto-response.dto';
+import { Funcao } from './create-usuario.dto';
 
 export class UsuarioProjetosResponseDto extends BaseResponseDto {
   @ApiProperty()
@@ -27,4 +28,11 @@ export class UsuarioProjetosResponseDto extends BaseResponseDto {
 
   @ApiProperty({ type: () => [ProjetoResponseDto] })
   projetos: Projeto[];
+
+  @ApiProperty({
+    description: 'Função do usuário',
+    enum: Funcao,
+    example: Funcao.COMUM,
+  })
+  funcao?: Funcao;
 }
