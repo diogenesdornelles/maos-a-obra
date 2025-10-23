@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const stripDigits = (value?: string) => value?.replace(/\D/g, '') ?? '';
 
-const isValidCPF = (cpf: string) => {
+export const isValidCPF = (cpf: string) => {
   if (!cpf || cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
   const calc = (factor: number) =>
     Array.from({ length: factor - 1 }).reduce(
@@ -14,7 +14,7 @@ const isValidCPF = (cpf: string) => {
   return digit1 === Number(cpf[9]) && digit2 === Number(cpf[10]);
 };
 
-const isValidCNPJ = (cnpj: string) => {
+export const isValidCNPJ = (cnpj: string) => {
   if (!cnpj || cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
   const calc = (len: number) => {
     const factors =
@@ -25,7 +25,7 @@ const isValidCNPJ = (cnpj: string) => {
   const digit2 = calc(13) % 11 < 2 ? 0 : 11 - (calc(13) % 11);
   return digit1 === Number(cnpj[12]) && digit2 === Number(cnpj[13]);
 };
-const trimOrUndefined = () =>
+export const trimOrUndefined = () =>
   z
     .string()
     .optional()
@@ -35,7 +35,7 @@ const trimOrUndefined = () =>
       return trimmed.length === 0 ? undefined : trimmed;
     });
 
-const digitsOrUndefined = () =>
+export const digitsOrUndefined = () =>
   z
     .string()
     .optional()
