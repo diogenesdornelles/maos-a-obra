@@ -8,7 +8,7 @@ import {
   AddClientFormData,
   addClientSchema,
 } from '@/features/(platform)/clientes/adicionar/validations/adicionarClientForm';
-import { usePostCreateClient } from '@/hooks/queries/clients/usePostCreateClient';
+import { usePostCreateCliente } from '@/hooks/queries/clients/usePostCreateCliente';
 import { useGetEnderecosBySearch } from '@/hooks/queries/enderecos/useGetEnderecosBySearch';
 import { useDebounce } from '@/hooks/useDebounce';
 import { CreateCliente } from '@/types/clientes/create';
@@ -47,7 +47,7 @@ export default function ClientesAdicionarScreen() {
       take: 20,
     });
 
-  const { mutate } = usePostCreateClient();
+  const { mutate } = usePostCreateCliente();
 
   // --------------- LÓGICA
 
