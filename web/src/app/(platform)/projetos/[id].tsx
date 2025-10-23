@@ -52,7 +52,7 @@ export default function ProjetosAdicionarItensScreen() {
   const preco = watch('preco');
   const quantidade = watch('quantidade');
 
-  const { data: projeto } = useGetProjetoById({ id: local.id });
+  const { data: projeto, refetch: refetchProjeto } = useGetProjetoById({ id: local.id });
 
   const { data: itemPreco } = useGetItemPreco({
     estadoId: projeto?.estadoId ?? '',
@@ -168,6 +168,7 @@ export default function ProjetosAdicionarItensScreen() {
           setPrecoDisplay('');
           setItemIdSearch('');
           refetchProjetoItem();
+          refetchProjeto();
         },
         onError: (error) => {
           setModalType('error');
@@ -255,13 +256,13 @@ export default function ProjetosAdicionarItensScreen() {
           )}
         />
 
-        <Text className="mb-1 text-lg font-bold">Total item: {formatCurrency(total)}</Text>
+        <Text className="mb-3 text-lg font-bold">Total item: {formatCurrency(total)}</Text>
 
         <Button onPress={handleSubmit(onSubmit)} disabled={!isValid && !projeto?.id}>
           <Text>Salvar</Text>
         </Button>
 
-        <Text className="my-1 text-lg font-bold">
+        <Text className="my-3 text-lg font-bold">
           Total projeto: {formatCurrency(projeto?.valorTotal ? parseFloat(projeto.valorTotal) : 0)}
         </Text>
       </View>
@@ -297,7 +298,7 @@ export default function ProjetosAdicionarItensScreen() {
           isFetchingNextPage={isFetchingNextPageProjetoItem}
           hasNextPage={hasNextPageProjetoItem}
           onLoadMore={fetchNextPageProjetoItem}
-          emptyMessage="Nenhum projeto encontrado"
+          emptyMessage="Nenhum item encontrado"
         />
       </View>
 
