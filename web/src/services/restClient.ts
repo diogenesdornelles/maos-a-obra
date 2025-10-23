@@ -22,7 +22,6 @@ export class ApiClient {
 
     this.api.interceptors.request.use(
       async (config) => {
-        // Tenta pegar o token do store primeiro, depois do storage
         let token = useStoreSession.getState().token;
 
         if (!token) {
@@ -90,13 +89,13 @@ export class ApiClient {
     return response.data;
   }
 
-  async patch<T>(url: string, data: any): Promise<T> {
-    const response = await this.api.patch(url, data);
+  async put<T>(url: string, data: any): Promise<T> {
+    const response = await this.api.put(url, data);
     return response.data;
   }
 
-  async put<T>(url: string, data: any): Promise<T> {
-    const response = await this.api.put(url, data);
+    async patch<T>(url: string, data: any): Promise<T> {
+    const response = await this.api.patch(url, data);
     return response.data;
   }
 
@@ -107,3 +106,7 @@ export class ApiClient {
 }
 
 export const restClient = new ApiClient();
+
+
+
+
