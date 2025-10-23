@@ -90,6 +90,11 @@ export class ApiClient {
     return response.data;
   }
 
+  async patch<T>(url: string, data: any): Promise<T> {
+    const response = await this.api.patch(url, data);
+    return response.data;
+  }
+
   async put<T>(url: string, data: any): Promise<T> {
     const response = await this.api.put(url, data);
     return response.data;
