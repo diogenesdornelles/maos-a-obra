@@ -2,6 +2,7 @@ import { restClient } from '@/services/restClient';
 import { CreatedEndereco, CreateEndereco } from '@/types/enderecos/create';
 import { EnderecoProps } from '@/types/enderecos/enderecos';
 import { EnderecosFilterQuery } from '@/types/enderecos/filtersQuery';
+import { UpdateEndereco } from '@/types/enderecos/update';
 
 export const enderecosApi = {
   createEndereco: async (body: CreateEndereco) => {
@@ -33,6 +34,16 @@ export const enderecosApi = {
       `/enderecos/${id}`
     );
 
+    return data;
+  },
+
+  updateEndereco: async (body: UpdateEndereco) => {
+      const data = await restClient.patch<CreatedEndereco>(`/enderecos`, body);
+      return data;
+    },
+
+  deleteEndereco: async (id: string) => {
+    const data = await restClient.delete<CreatedEndereco>(`/enderecos/${id}`);
     return data;
   },
 };
