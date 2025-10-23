@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "maos_a_obra",
+    "name": "Mãos à Obra",
     "slug": "maos_a_obra",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,7 +26,7 @@
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dornellesfr.maos_a_obra"
+      "package": "com.dornelles.maos_a_obra"
     },
     "web": {
       "bundler": "metro",
