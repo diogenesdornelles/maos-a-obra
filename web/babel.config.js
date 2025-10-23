@@ -15,7 +15,6 @@ module.exports = function (api) {
     ],
   ];
 
-  // Adiciona NativeWind e Reanimated apenas fora dos testes
   if (!isTest) {
     plugins.push('react-native-reanimated/plugin');
   }
