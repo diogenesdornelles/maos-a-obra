@@ -1,5 +1,6 @@
 import { restClient } from '@/services/restClient';
 import { CreatedUser, CreateUserForm, InsertUserComplete } from '@/types/usuarios/createUser';
+import { UpdateUser } from '@/types/usuarios/update';
 import { MeProps } from '@/types/usuarios/usuarios';
 
 export const usersApi = {
@@ -16,6 +17,16 @@ export const usersApi = {
   },
   getMe: async () => {
         const data = await restClient.get<MeProps>('/usuarios/me');
+    return data;
+  },
+
+  updateUser: async (body: UpdateUser) => {
+        const data = await restClient.patch<CreatedUser>(`/usuarios`, body);
+        return data;
+      },
+
+  deleteUser: async (id: string) => {
+    const data = await restClient.delete<CreatedUser>(`/usuarios/${id}`);
     return data;
   },
 };
