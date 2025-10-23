@@ -3,7 +3,6 @@ import { InputText } from '@/components/Inputs/InputText';
 import { Select, SelectOption } from '@/components/Inputs/Select';
 import { Modal } from '@/components/Modal';
 import { Button } from '@/components/ui/button';
-import { CardContent, CardHeader } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import {
   AddProjetoItensFormData,
@@ -21,7 +20,7 @@ import { ProjetoItemProps } from '@/types/projeto-itens/projetoItens';
 import { arrayOfErrors } from '@/utils/errorsParser';
 import { formatCurrency, formatCurrencyInput, parseCurrencyToNumber } from '@/utils/parseCurrency';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { TouchableOpacity, View } from 'react-native';
@@ -70,6 +69,8 @@ export default function ProjetosAdicionarItensScreen() {
   } = useGetProjetoItensBySearch({
     projetoId: projeto?.id,
     take: 20,
+    orderBy: 'criadoEm',
+    orderDir: 'desc',
   });
 
   const {
@@ -127,12 +128,6 @@ export default function ProjetosAdicionarItensScreen() {
             }}>
             <Text>Continuar</Text>
           </Button>
-          <Button
-            onPress={() => {
-              router.back();
-            }}>
-            <Text>Voltar</Text>
-          </Button>
         </View>
       ),
     },
@@ -154,7 +149,6 @@ export default function ProjetosAdicionarItensScreen() {
 
   function onSubmit(data: AddProjetoItensFormData) {
     if (!projeto?.id) {
-      console.error('Projeto não encontrado');
       return;
     }
 
@@ -261,46 +255,41 @@ export default function ProjetosAdicionarItensScreen() {
           )}
         />
 
-        <Text className="mt-2 text-lg font-bold">Total: {formatCurrency(total)}</Text>
+        <Text className="mb-1 text-lg font-bold">Total item: {formatCurrency(total)}</Text>
 
         <Button onPress={handleSubmit(onSubmit)} disabled={!isValid && !projeto?.id}>
           <Text>Salvar</Text>
         </Button>
+
+        <Text className="my-1 text-lg font-bold">
+          Total projeto: {formatCurrency(projeto?.valorTotal ? parseFloat(projeto.valorTotal) : 0)}
+        </Text>
       </View>
 
-      <View className="w-full flex-1 px-5 pb-10">
+      <View className="mb-5 w-full flex-1">
         <InfiniteList<ProjetoItemProps>
           data={projetoItensList}
+          className="flex-1"
           renderItem={(item) => {
             return (
-              <View className="py-3">
-                <View className="flex items-center justify-center">
-                  <View className="w-full flex-1 px-2">
-                    <CardHeader className="gap-1">
-                      <Text className="text-base font-semibold leading-snug">
-                        {item?.nomenclatura}
-                      </Text>
-                    </CardHeader>
-                    <CardContent className="gap-1">
-                      {item?.codigo && (
-                        <Text className="text-sm text-muted-foreground">Código: {item.codigo}</Text>
-                      )}
-                      {item?.preco && (
-                        <Text className="text-sm text-muted-foreground">Unidade: {item.preco}</Text>
-                      )}
-                      {item?.quantidade && (
-                        <Text className="text-sm text-muted-foreground">
-                          Quantidade: {item.quantidade}
-                        </Text>
-                      )}
-                      {item?.valorTotal && (
-                        <Text className="text-sm text-muted-foreground">
-                          Valor total: R$ {parseFloat(item.preco) * parseFloat(item.quantidade)}
-                        </Text>
-                      )}
-                    </CardContent>
-                  </View>
-                </View>
+              <View className="flex items-start justify-center py-2">
+                <Text className="text-base font-semibold leading-snug">{item?.nomenclatura}</Text>
+                {item?.codigo && (
+                  <Text className="text-sm text-muted-foreground">Código: {item.codigo}</Text>
+                )}
+                {item?.preco && (
+                  <Text className="text-sm text-muted-foreground">Unidade: {item.preco}</Text>
+                )}
+                {item?.quantidade && (
+                  <Text className="text-sm text-muted-foreground">
+                    Quantidade: {item.quantidade}
+                  </Text>
+                )}
+                {item?.valorTotal && (
+                  <Text className="text-sm text-muted-foreground">
+                    Valor total: R$ {parseFloat(item.preco) * parseFloat(item.quantidade)}
+                  </Text>
+                )}
               </View>
             );
           }}
@@ -308,8 +297,7 @@ export default function ProjetosAdicionarItensScreen() {
           isFetchingNextPage={isFetchingNextPageProjetoItem}
           hasNextPage={hasNextPageProjetoItem}
           onLoadMore={fetchNextPageProjetoItem}
-          emptyMessage="Nenhum cliente encontrado"
-          className="h-full"
+          emptyMessage="Nenhum projeto encontrado"
         />
       </View>
 
