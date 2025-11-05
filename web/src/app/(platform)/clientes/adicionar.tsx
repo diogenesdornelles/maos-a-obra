@@ -44,6 +44,7 @@ export default function ClientesAdicionarScreen() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetEnderecosBySearch({
       logradouro: debouncedValue,
+      status: 'true',
       take: 20,
     });
 
