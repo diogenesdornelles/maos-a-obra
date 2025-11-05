@@ -20,8 +20,8 @@ export const usersApi = {
     return data;
   },
 
-  updateUser: async (body: UpdateUser) => {
-        const data = await restClient.patch<CreatedUser>(`/usuarios`, body);
+  updateUser: async (body: Partial<UpdateUser>, id: string) => {
+        const data = await restClient.patch<CreatedUser>(`/usuarios/${id}`, body);
         return data;
       },
 
