@@ -33,8 +33,8 @@ export const clientesApi = {
     return data;
   },
 
-  updateCliente: async (body: UpdateCliente) => {
-    const data = await restClient.patch<CreatedCliente>(`/clientes`, body);
+  updateCliente: async (body: Partial<UpdateCliente>, id: string) => {
+    const data = await restClient.patch<CreatedCliente>(`/clientes/${id}`, body);
     return data;
   },
 
