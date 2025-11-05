@@ -36,8 +36,8 @@ export const projetosApi = {
     return data;
   },
 
-  updateProjeto: async (body: UpdateProjeto) => {
-      const data = await restClient.patch<CreatedProjeto>(`/projetos`, body);
+  updateProjeto: async (body: Partial<UpdateProjeto>, id: string) => {
+      const data = await restClient.patch<CreatedProjeto>(`/projetos/${id}`, body);
       return data;
     },
   deleteProjeto: async (id: string) => {
