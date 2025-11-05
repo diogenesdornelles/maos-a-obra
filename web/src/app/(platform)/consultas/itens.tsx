@@ -33,6 +33,7 @@ export default function ClientesConsultarScreen() {
     fetchNextPage: fetchNextPageItens,
   } = useGetItensBySearch({
     nomenclatura: debouncedItem,
+    status: 'true',
     take: 20,
   });
 
@@ -44,6 +45,7 @@ export default function ClientesConsultarScreen() {
     fetchNextPage: fetchNextPageEstados,
   } = useGetEstadosBySearch({
     nome: debouncedEstado,
+    status: 'true',
     take: 20,
   });
 
