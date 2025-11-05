@@ -8,7 +8,7 @@ import { useSession } from '@/hooks/useSession';
 import { router, Stack } from 'expo-router';
 import { Building2, Calendar, Folder, LogOut, Mail, User } from 'lucide-react-native';
 import moment from 'moment';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 
 export default function PerfilScreen() {
   const { data: usuario, isLoading } = useGetMe();
@@ -32,8 +32,20 @@ export default function PerfilScreen() {
       label: projeto.nome,
       icon: Folder,
       description: projeto.descricao || idx,
-      onPress: () => router.push(`/(platform)/projetos`),
-      // onPress: () => router.push(`/(platform)/projetos/${projeto.id}`),
+      onPress: () => projeto.status !== 'CANCELADO' ? router.push(`/(platform)/projetos/${projeto.id}`) : Alert.alert(
+        'Erro',
+        'Projeto foi excluído',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              console.log('Alerta dispensado');
+            },
+            style: 'default',
+          },
+        ],
+        { cancelable: true }
+      ),
       badge:
         projeto.status === 'EM_ANDAMENTO'
           ? 'Em Andamento'
