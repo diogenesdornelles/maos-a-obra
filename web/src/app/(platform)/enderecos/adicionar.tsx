@@ -39,6 +39,7 @@ export default function EnderecosAdicionarScreen() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetBairrosBySearch(
     {
       nome: debouncedValue,
+      status: 'true',
       take: 20,
     }
   );
