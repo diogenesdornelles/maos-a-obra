@@ -37,8 +37,8 @@ export const enderecosApi = {
     return data;
   },
 
-  updateEndereco: async (body: UpdateEndereco) => {
-      const data = await restClient.patch<CreatedEndereco>(`/enderecos`, body);
+  updateEndereco: async (body: Partial<UpdateEndereco>, id: string) => {
+      const data = await restClient.patch<CreatedEndereco>(`/enderecos/${id}`, body);
       return data;
     },
 
