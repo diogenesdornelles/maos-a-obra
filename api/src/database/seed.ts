@@ -11,6 +11,10 @@ const SUPER_EMAIL = process.env.SUPER_EMAIL;
 const SUPER_PWD = process.env.SUPER_PWD;
 const SUPER_CPF = process.env.SUPER_CPF;
 
+const COMUM_EMAIL = process.env.COMUM_EMAIL;
+const COMUM_PWD = process.env.COMUM_PWD;
+const COMUM_CPF = process.env.COMUM_CPF;
+
 const prisma = new PrismaClient();
 
 async function executeSqlFile(filePath: string) {
@@ -94,6 +98,21 @@ async function main() {
       },
     });
     console.log(`Seed super user executada com sucesso!`);
+
+    await prisma.usuario.upsert({
+      where: { email: COMUM_EMAIL ?? '' },
+      update: {},
+      create: {
+        cpf: COMUM_CPF ?? '',
+        email: COMUM_EMAIL ?? '',
+        senha: await bcrypt.hash(COMUM_PWD ?? '', 10),
+        nome: 'Comum',
+        sobrenome: 'User',
+        funcao: Funcao.COMUM,
+        nascimento: '1985-01-01T03:00:00.000Z',
+      },
+    });
+    console.log(`Seed comum user executada com sucesso!`);
   } catch (error) {
     console.error(`Erro ao executar super user seed:`, error);
     throw error;
