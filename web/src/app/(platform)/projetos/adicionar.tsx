@@ -51,6 +51,7 @@ export default function ProjetosAdicionarScreen() {
     fetchNextPage: fetchNextPageClients,
   } = useGetClientesBySearch({
     nome: debouncedClient,
+    status: 'true',
     take: 20,
   });
 
@@ -74,6 +75,7 @@ export default function ProjetosAdicionarScreen() {
     fetchNextPage: fetchNextPageEstados,
   } = useGetEstadosBySearch({
     nome: debouncedEstado,
+    status: 'true',
     take: 20,
   });
 
