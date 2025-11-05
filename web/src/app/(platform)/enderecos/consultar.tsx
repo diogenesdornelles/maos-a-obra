@@ -24,6 +24,7 @@ export default function EnderecosConsultarScreen() {
       logradouro: filters?.logradouro,
       cep: filters?.cep,
       numero: filters?.numero,
+      status: 'true',
       take: 20,
     });
 
