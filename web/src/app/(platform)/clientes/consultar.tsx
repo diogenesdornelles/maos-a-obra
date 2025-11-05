@@ -27,6 +27,7 @@ export default function ClientesConsultarScreen() {
       cpf: filters?.cnpj,
       email: filters?.email,
       cnpj: filters?.cnpj,
+      status: 'true',
       take: 20,
     });
 
