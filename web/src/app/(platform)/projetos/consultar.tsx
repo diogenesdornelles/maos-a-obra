@@ -16,10 +16,10 @@ import { EstadoProps } from '@/types/estados/estados';
 import { ProjetoProps } from '@/types/projetos/projetos';
 import { formatCurrency } from '@/utils/parseCurrency';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { TouchableOpacity, View } from 'react-native';
+import { Alert, Pressable, TouchableOpacity, View } from 'react-native';
 
 export default function ProjetosConsultarScreen() {
   // STATES REACT
@@ -62,6 +62,7 @@ export default function ProjetosConsultarScreen() {
     fetchNextPage: fetchNextPageClients,
   } = useGetClientesBySearch({
     nome: debouncedClient,
+    status: 'true',
     take: 20,
   });
 
@@ -73,6 +74,7 @@ export default function ProjetosConsultarScreen() {
     fetchNextPage: fetchNextPageEstados,
   } = useGetEstadosBySearch({
     nome: debouncedEstado,
+    status: 'true',
     take: 20,
   });
 
@@ -106,6 +108,24 @@ export default function ProjetosConsultarScreen() {
   // FUNÇÕES E USEEFFECTS
   function onSubmit(data: consultaProjetoFormData) {
     setFilters({ clienteId: data?.clienteId, estado: data?.estado, nome: data?.nome });
+  }
+
+  function handleProjetoPress(projeto: ProjetoProps) {
+    if (projeto.status === 'CANCELADO') {
+      Alert.alert(
+        'Projeto Cancelado',
+        'Este projeto foi cancelado e não pode ser acessado.',
+        [
+          {
+            text: 'OK',
+            style: 'default',
+          },
+        ],
+        { cancelable: true }
+      );
+    } else {
+      router.push(`/(platform)/projetos/${projeto.id}`);
+    }
   }
 
   return (
@@ -226,7 +246,9 @@ export default function ProjetosConsultarScreen() {
           data={projetoList}
           renderItem={(item) => {
             return (
-              <View className="py-3">
+              <Pressable
+                onPress={() => handleProjetoPress(item)}
+                className="py-3 active:opacity-70">
                 <View className="flex items-center justify-center">
                   <Text className="text-base font-medium">{item?.nome}</Text>
                   {item?.cliente?.nome && item?.cliente?.sobrenome && (
@@ -244,8 +266,39 @@ export default function ProjetosConsultarScreen() {
                       Valor total: {formatCurrency(parseFloat(item?.valorTotal))}
                     </Text>
                   )}
+                  {item?.status && (
+                    <View
+                      className={`mt-1 rounded-full px-2 py-1 ${
+                        item.status === 'EM_ANDAMENTO'
+                          ? 'bg-blue-100'
+                          : item.status === 'CONCLUIDO'
+                            ? 'bg-green-100'
+                            : item.status === 'CANCELADO'
+                              ? 'bg-red-100'
+                              : 'bg-gray-100'
+                      }`}>
+                      <Text
+                        className={`text-xs font-medium ${
+                          item.status === 'EM_ANDAMENTO'
+                            ? 'text-blue-700'
+                            : item.status === 'CONCLUIDO'
+                              ? 'text-green-700'
+                              : item.status === 'CANCELADO'
+                                ? 'text-red-700'
+                                : 'text-gray-700'
+                        }`}>
+                        {item.status === 'EM_ANDAMENTO'
+                          ? 'Em Andamento'
+                          : item.status === 'CONCLUIDO'
+                            ? 'Concluído'
+                            : item.status === 'CANCELADO'
+                              ? 'Cancelado'
+                              : 'Pendente'}
+                      </Text>
+                    </View>
+                  )}
                 </View>
-              </View>
+              </Pressable>
             );
           }}
           isLoading={isLoadingProjetos}
