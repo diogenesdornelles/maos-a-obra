@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useGetClientesBySearch } from '@/hooks/queries/clients/useGetClientesBySearch';
 import { ClienteProps } from '@/types/clientes/clientes';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 export default function ClientesConsultarScreen() {
   const [nome, setNome] = useState('');
@@ -24,7 +24,7 @@ export default function ClientesConsultarScreen() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetClientesBySearch({
       nome: filters?.nome,
-      cpf: filters?.cnpj,
+      cpf: filters?.cpf,
       email: filters?.email,
       cnpj: filters?.cnpj,
       status: 'true',
@@ -35,6 +35,10 @@ export default function ClientesConsultarScreen() {
 
   function onSubmit() {
     setFilters({ cnpj, cpf, email, nome });
+  }
+
+  function handleClientePress(cliente: ClienteProps) {
+    router.push(`/(platform)/clientes/${cliente.id}`);
   }
 
   return (
@@ -67,7 +71,9 @@ export default function ClientesConsultarScreen() {
           data={clientes}
           renderItem={(item) => {
             return (
-              <View className="py-3">
+              <Pressable
+                onPress={() => handleClientePress(item)}
+                className="py-3 active:opacity-70">
                 <View className="flex items-center justify-center">
                   <Text className="text-base font-medium">
                     {item?.nome} {item?.sobrenome}
@@ -92,7 +98,7 @@ export default function ClientesConsultarScreen() {
                     </Text>
                   )}
                 </View>
-              </View>
+              </Pressable>
             );
           }}
           isLoading={isLoading}
