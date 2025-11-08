@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useGetEnderecosBySearch } from '@/hooks/queries/enderecos/useGetEnderecosBySearch';
 import { EnderecoProps } from '@/types/enderecos/enderecos';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 export default function EnderecosConsultarScreen() {
   const [logradouro, setLogradouro] = useState('');
@@ -32,6 +32,10 @@ export default function EnderecosConsultarScreen() {
 
   function onSubmit() {
     setFilters({ cep, logradouro, numero: numeroCasa });
+  }
+
+  function handleEnderecoPress(endereco: EnderecoProps) {
+    router.push(`/(platform)/enderecos/${endereco.id}`);
   }
 
   return (
@@ -63,7 +67,9 @@ export default function EnderecosConsultarScreen() {
           data={enderecos}
           renderItem={(item) => {
             return (
-              <View className="py-3">
+              <Pressable
+                onPress={() => handleEnderecoPress(item)}
+                className="py-3 active:opacity-70">
                 <View className="flex items-center justify-center">
                   <Text className="text-base font-medium">
                     {item?.bairro?.nome?.split(' - ')[0]}
@@ -84,10 +90,12 @@ export default function EnderecosConsultarScreen() {
                     <Text className="text-sm text-muted-foreground">CEP: {item?.cep}</Text>
                   )}
                   {item?.complemento && (
-                    <Text className="text-sm text-muted-foreground">CEP: {item?.complemento}</Text>
+                    <Text className="text-sm text-muted-foreground">
+                      Complemento: {item?.complemento}
+                    </Text>
                   )}
                 </View>
-              </View>
+              </Pressable>
             );
           }}
           isLoading={isLoading}
