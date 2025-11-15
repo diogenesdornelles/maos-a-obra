@@ -6,7 +6,7 @@ import { useGetEnderecosBySearch } from '@/hooks/queries/enderecos/useGetEnderec
 import { EnderecoProps } from '@/types/enderecos/enderecos';
 import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 export default function EnderecosConsultarScreen() {
   const [logradouro, setLogradouro] = useState('');
@@ -35,6 +35,7 @@ export default function EnderecosConsultarScreen() {
   }
 
   function handleEnderecoPress(endereco: EnderecoProps) {
+
     router.push(`/(platform)/enderecos/${endereco.id}`);
   }
 
