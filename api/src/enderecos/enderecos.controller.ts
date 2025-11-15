@@ -11,6 +11,7 @@ import {
   UseGuards,
   Request,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { EnderecosService } from './enderecos.service';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
@@ -34,6 +35,7 @@ import { SearchEnderecoDto } from './dto/search-endereco.dto';
 import type { RequestWithUser } from 'src/auth/id-param-self.guard';
 import { defaultGetParamsAssembler } from 'src/utils/defaultGetParamsAssembler';
 import { orderByKeys } from './constants/orderByKeys';
+import { EnderecoOwnerGuard } from 'src/auth/endereco-owner.guard';
 
 @ApiTags('enderecos')
 @Controller('enderecos')
@@ -115,8 +117,7 @@ export class EnderecosController {
   @Get(':id')
   @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN, Funcao.COMUM)
+  @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({ description: 'Endereco', type: EnderecoResponseDto })
   @ApiOperation({
     summary: 'Buscar endereço por ID',
@@ -125,22 +126,13 @@ export class EnderecosController {
     @Param('id', ParseUUIDPipe) id: string,
     @Request() req: RequestWithUser,
   ) {
-    const endereco = await this.enderecosService.findOne({ id });
-    if (
-      req.user.funcao === Funcao.COMUM &&
-      endereco &&
-      endereco.usuarioId === req.user.id
-    ) {
-      return endereco;
-    }
-    throw new UnauthorizedException('Credenciais inválidas');
+    return await this.enderecosService.findOne({ id });
   }
 
   @Patch(':id')
   @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN)
+  @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({
     description: 'Endereco atualizado',
     type: EnderecoResponseDto,
@@ -151,18 +143,7 @@ export class EnderecosController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateEnderecoDto: UpdateEnderecoDto,
-    @Request() req: RequestWithUser,
   ) {
-    const endereco = await this.enderecosService.findOne({ id });
-    if (!endereco) {
-      throw new UnauthorizedException('Credenciais inválidas');
-    }
-    if (
-      req.user.funcao === Funcao.COMUM &&
-      endereco.usuarioId !== req.user.id
-    ) {
-      throw new UnauthorizedException('Credenciais inválidas');
-    }
     const where: Prisma.EnderecoWhereUniqueInput = { id };
     return await this.enderecosService.update(where, updateEnderecoDto);
   }
@@ -170,8 +151,7 @@ export class EnderecosController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN)
+  @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({
     description: 'Endereco deletado',
     type: EnderecoResponseDto,
@@ -179,20 +159,7 @@ export class EnderecosController {
   @ApiOperation({
     summary: 'Deletar endereço por ID',
   })
-  async remove(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Request() req: RequestWithUser,
-  ) {
-    const endereco = await this.enderecosService.findOne({ id });
-    if (!endereco) {
-      throw new UnauthorizedException('Credenciais inválidas');
-    }
-    if (
-      req.user.funcao === Funcao.COMUM &&
-      endereco.usuarioId !== req.user.id
-    ) {
-      throw new UnauthorizedException('Credenciais inválidas');
-    }
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return await this.enderecosService.remove({ id });
   }
 }
