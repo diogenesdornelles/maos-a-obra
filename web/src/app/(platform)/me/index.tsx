@@ -1,3 +1,4 @@
+import { InputDate } from '@/components/Inputs/InputDate';
 import { InputText } from '@/components/Inputs/InputText';
 import { ListMenu } from '@/components/ListMenu';
 import { CardMenuProps } from '@/components/ListMenu/CardMenu';
@@ -222,6 +223,7 @@ export default function PerfilScreen() {
           <Controller
             control={control}
             name="nome"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Nome"
@@ -237,6 +239,7 @@ export default function PerfilScreen() {
           <Controller
             control={control}
             name="sobrenome"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Sobrenome"
@@ -251,6 +254,7 @@ export default function PerfilScreen() {
           <Controller
             control={control}
             name="email"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Email"
@@ -266,6 +270,7 @@ export default function PerfilScreen() {
           <Controller
             control={control}
             name="cpf"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="CPF"
@@ -281,8 +286,9 @@ export default function PerfilScreen() {
           <Controller
             control={control}
             name="nascimento"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
-              <InputText
+              <InputDate
                 label="Data de Nascimento"
                 placeholder="DD/MM/AAAA"
                 onChangeText={isEditing ? onChange : undefined}
@@ -296,6 +302,7 @@ export default function PerfilScreen() {
             <Controller
               control={control}
               name="senha"
+              disabled={!isEditing}
               render={({ field: { onChange, value } }) => (
                 <InputText
                   label="Nova Senha (opcional)"
