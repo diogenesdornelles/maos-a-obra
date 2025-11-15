@@ -3,6 +3,7 @@ import { deleteToken, getToken } from '@/hooks/useStorage';
 import { ErrorApi } from '@/types/errorParser';
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { router } from 'expo-router';
+import { Alert } from 'react-native';
 
 export class ApiClient {
   private api: AxiosInstance;
@@ -51,10 +52,27 @@ export class ApiClient {
             useStoreSession.getState().setToken(undefined);
             useStoreSession.getState().setSession(undefined);
 
-            router.dismissAll();
-            router.replace('/');
+            Alert.alert(
+              'Sessão Expirada',
+              'Sua sessão expirou ou você não tem permissão para acessar este recurso. Por favor, faça login novamente.',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    router.dismissAll();
+                    router.replace('/');
+                  },
+                  style: 'default',
+                },
+              ],
+              { 
+                cancelable: false
+              }
+            );
           } catch (logoutError) {
             console.error('Error during logout:', logoutError);
+            router.dismissAll();
+            router.replace('/');
           } finally {
             this.isRefreshing = false;
           }
@@ -94,7 +112,7 @@ export class ApiClient {
     return response.data;
   }
 
-    async patch<T>(url: string, data: any): Promise<T> {
+  async patch<T>(url: string, data: any): Promise<T> {
     const response = await this.api.patch(url, data);
     return response.data;
   }
@@ -106,7 +124,3 @@ export class ApiClient {
 }
 
 export const restClient = new ApiClient();
-
-
-
-
