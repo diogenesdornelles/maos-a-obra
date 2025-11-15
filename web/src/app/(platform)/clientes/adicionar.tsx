@@ -39,8 +39,6 @@ export default function ClientesAdicionarScreen() {
   const [enderecoSearch, setEnderecoSearch] = useState('');
   const { debouncedValue } = useDebounce(enderecoSearch, 500);
 
-  // ---------------  APIS
-
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useGetEnderecosBySearch({
       logradouro: debouncedValue,
@@ -49,8 +47,6 @@ export default function ClientesAdicionarScreen() {
     });
 
   const { mutate } = usePostCreateCliente();
-
-  // --------------- LÓGICA
 
   const enderecoOptions: SelectOption[] = useMemo(() => {
     if (!data?.pages) return [];
