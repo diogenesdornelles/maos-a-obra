@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 
 interface InputDateProps {
@@ -26,12 +26,41 @@ export function InputDate({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  useEffect(() => {
+    if (value) {
+      const dateOnly = value.split('T')[0];
+      const [year, month, day] = dateOnly.split('-').map(Number);
+      
+      const date = new Date(year, month - 1, day);
+      
+      if (!isNaN(date.getTime())) {
+        setSelectedDate(date);
+      }
+    }
+  }, [value]);
+
+  const formatDateToBR = (dateString?: string): string => {
+    if (!dateString) return '';
+    
+    const dateOnly = dateString.split('T')[0];
+    const [year, month, day] = dateOnly.split('-');
+    
+    return `${day}/${month}/${year}`;
+  };
+
   const handleDateChange = (event: any, date?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (date) {
       setSelectedDate(date);
-      const formattedDate = date.toLocaleDateString('pt-BR');
-      onChangeText?.(formattedDate);
+      
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      
+      const utcDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+      const isoString = utcDate.toISOString();
+      
+      onChangeText?.(isoString);
     }
   };
 
@@ -44,7 +73,7 @@ export function InputDate({
       )}
       <Pressable onPress={() => setShowDatePicker(true)}>
         <Input
-          value={value}
+          value={formatDateToBR(value)}
           placeholder={placeholder || 'Selecione uma data'}
           editable={false}
           pointerEvents="none"
