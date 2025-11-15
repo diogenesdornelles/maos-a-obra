@@ -10,8 +10,6 @@ import {
   Query,
   UseGuards,
   Request,
-  UnauthorizedException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { EnderecosService } from './enderecos.service';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
@@ -122,10 +120,7 @@ export class EnderecosController {
   @ApiOperation({
     summary: 'Buscar endereço por ID',
   })
-  async findOne(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Request() req: RequestWithUser,
-  ) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.enderecosService.findOne({ id });
   }
 
