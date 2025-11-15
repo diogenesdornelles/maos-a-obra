@@ -94,7 +94,7 @@ async function main() {
         nome: 'Super',
         sobrenome: 'Admin',
         funcao: Funcao.ADMIN,
-        nascimento: '1985-01-01T03:00:00.000Z',
+        nascimento: '1985-01-01T00:00:00.000Z',
       },
     });
     console.log(`Seed super user executada com sucesso!`);
@@ -109,7 +109,7 @@ async function main() {
         nome: 'Comum',
         sobrenome: 'User',
         funcao: Funcao.COMUM,
-        nascimento: '1985-01-01T03:00:00.000Z',
+        nascimento: '1985-01-01T00:00:00.000Z',
       },
     });
     console.log(`Seed comum user executada com sucesso!`);
