@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 
 import { Funcao } from 'src/usuarios/dto/create-usuario.dto';
@@ -25,7 +26,7 @@ export class ClienteOwnerGuard implements CanActivate {
     const cliente = await this.clientesService.findOne({ id: clienteId });
 
     if (!cliente) {
-      throw new UnauthorizedException('Cliente não encontrado');
+      throw new UnprocessableEntityException('Cliente não encontrado');
     }
 
     if (user.funcao === Funcao.ADMIN) {
