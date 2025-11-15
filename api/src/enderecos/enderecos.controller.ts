@@ -36,14 +36,14 @@ import { orderByKeys } from './constants/orderByKeys';
 import { EnderecoOwnerGuard } from 'src/auth/endereco-owner.guard';
 
 @ApiTags('enderecos')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Funcao.ADMIN, Funcao.COMUM)
 @Controller('enderecos')
 export class EnderecosController {
   constructor(private readonly enderecosService: EnderecosService) {}
 
   @Post()
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiCreatedResponse({
     description: 'Endereco criado',
     type: EnderecoResponseDto,
@@ -62,9 +62,6 @@ export class EnderecosController {
   }
 
   @Get()
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({
     description: 'Lista de enderecos',
     type: [EnderecoResponseDto],
@@ -81,9 +78,6 @@ export class EnderecosController {
   }
 
   @Get('search')
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Funcao.ADMIN, Funcao.COMUM)
   @ApiOkResponse({
     description: 'Busca avançada de endereços',
     type: [EnderecoResponseDto],
@@ -113,7 +107,6 @@ export class EnderecosController {
   }
 
   @Get(':id')
-  @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({ description: 'Endereco', type: EnderecoResponseDto })
@@ -125,7 +118,6 @@ export class EnderecosController {
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({
@@ -144,7 +136,6 @@ export class EnderecosController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string', format: 'uuid' })
   @UseGuards(EnderecoOwnerGuard)
   @ApiOkResponse({
