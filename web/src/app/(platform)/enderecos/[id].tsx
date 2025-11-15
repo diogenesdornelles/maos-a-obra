@@ -76,9 +76,9 @@ export default function EnderecoDetailScreen() {
     if (endereco) {
       setValue('bairroId', endereco.bairroId);
       setValue('logradouro', endereco.logradouro);
-      setValue('numero', endereco.numero || '');
-      setValue('cep', endereco.cep || '');
-      setValue('complemento', endereco.complemento || '');
+      setValue('numero', endereco.numero ?? undefined);
+      setValue('cep', endereco.cep ?? undefined);
+      setValue('complemento', endereco.complemento ?? undefined);
       setValue('status', endereco.status);
     }
   }, [endereco, setValue]);
@@ -115,16 +115,16 @@ export default function EnderecoDetailScreen() {
     },
   };
 
-  function handleEditToggle() {
-    if (isEditing && endereco) {
-      setValue('bairroId', endereco.bairroId);
-      setValue('logradouro', endereco.logradouro);
-      setValue('numero', endereco.numero || '');
-      setValue('cep', endereco.cep || '');
-      setValue('complemento', endereco.complemento || '');
-    }
-    setIsEditing(!isEditing);
+function handleEditToggle() {
+  if (isEditing && endereco) {
+    setValue('bairroId', endereco.bairroId);
+    setValue('logradouro', endereco.logradouro);
+    setValue('numero', endereco.numero ?? undefined);
+    setValue('cep', endereco.cep ?? undefined);
+    setValue('complemento', endereco.complemento ?? undefined);
   }
+  setIsEditing(!isEditing);
+}
 
   function handleDeleteConfirm() {
     setIsDeleteModalOpen(true);
@@ -266,7 +266,7 @@ export default function EnderecoDetailScreen() {
                 label="Número"
                 placeholder="Digite o número"
                 keyboardType="numeric"
-                value={value}
+                value={value || undefined}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.numero?.message}
               />
@@ -281,7 +281,7 @@ export default function EnderecoDetailScreen() {
                 label="CEP"
                 placeholder="Digite o CEP"
                 keyboardType="numeric"
-                value={value}
+                value={value || undefined}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.cep?.message}
               />
@@ -295,7 +295,7 @@ export default function EnderecoDetailScreen() {
               <InputText
                 label="Complemento"
                 placeholder="Digite algum complemento"
-                value={value}
+                value={value || undefined}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.complemento?.message}
               />
