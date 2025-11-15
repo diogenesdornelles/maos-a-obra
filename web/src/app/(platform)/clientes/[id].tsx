@@ -1,3 +1,4 @@
+import { InputDate } from '@/components/Inputs/InputDate';
 import { InputText } from '@/components/Inputs/InputText';
 import { Select, SelectOption } from '@/components/Inputs/Select';
 import { Modal } from '@/components/Modal';
@@ -8,7 +9,7 @@ import {
   updateClientSchema,
 } from '@/features/(platform)/clientes/alterar/validations/alterarClientForm';
 import { useDeleteClient } from '@/hooks/queries/clients/useDeleteCliente';
-import { useGetClienteById } from '@/hooks/queries/clients/useGetItemById';
+import { useGetClienteById } from '@/hooks/queries/clients/useGetClienteById';
 import { useUpdateCliente } from '@/hooks/queries/clients/useUpdateCliente';
 import { useGetEnderecosBySearch } from '@/hooks/queries/enderecos/useGetEnderecosBySearch';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -33,7 +34,7 @@ export default function ClienteDetailScreen() {
 
   const { debouncedValue } = useDebounce(enderecoSearch);
 
-  const { data: cliente, isLoading: isLoadingCliente } = useGetClienteById({ id: local.id });
+  const { data: cliente, isLoading: isLoadingCliente, refetch: refetchClient } = useGetClienteById({ id: local.id });
 
   const {
     data: enderecos,
@@ -176,6 +177,7 @@ export default function ClienteDetailScreen() {
       {
         onSuccess: () => {
           setModalType('success');
+          refetchClient();
           setIsOpen(true);
         },
         onError: (error) => {
@@ -218,6 +220,7 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="nome"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Nome"
@@ -232,6 +235,7 @@ export default function ClienteDetailScreen() {
 
           <Controller
             control={control}
+            disabled={!isEditing}
             name="sobrenome"
             render={({ field: { onChange, value } }) => (
               <InputText
@@ -246,6 +250,7 @@ export default function ClienteDetailScreen() {
 
           <Controller
             control={control}
+            disabled={!isEditing}
             name="cpf"
             render={({ field: { onChange, value } }) => (
               <InputText
@@ -262,6 +267,7 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="cnpj"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="CNPJ"
@@ -277,8 +283,9 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="nascimento"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
-              <InputText
+              <InputDate
                 label="Data de Nascimento"
                 placeholder="DD/MM/AAAA"
                 onChangeText={isEditing ? onChange : undefined}
@@ -291,6 +298,7 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="telefone"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Telefone"
@@ -306,6 +314,7 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="email"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Email"
@@ -321,6 +330,7 @@ export default function ClienteDetailScreen() {
           <Controller
             control={control}
             name="enderecoId"
+            disabled={!isEditing}
             render={({ field: { onChange, value } }) => (
               <Select<EnderecoProps>
                 label="Endereço"
