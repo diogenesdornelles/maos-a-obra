@@ -1,4 +1,4 @@
-import { itensApi } from '@/api/ itensApi';
+import { itensApi } from '@/api/itensApi';
 import { useQuery } from '@tanstack/react-query';
 
 export function useGetItemById({ id }: { id: string }) {
