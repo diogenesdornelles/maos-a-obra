@@ -28,8 +28,6 @@ export default function EnderecosConsultarScreen() {
       take: 20,
     });
 
-  alert(JSON.stringify(data))
-
   const enderecos = useMemo(() => data?.pages.flatMap((page) => page) ?? [], [data]);
 
   function onSubmit() {
