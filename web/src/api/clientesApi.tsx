@@ -18,6 +18,7 @@ export const clientesApi = {
     if (params?.cpf) searchParams.set('cpf', params.cpf);
     if (params?.email) searchParams.set('email', String(params.email));
     if (params?.nome) searchParams.set('nome', String(params.nome));
+    if (params?.status) searchParams.set('status', String(params.status));
 
     const data = await restClient.get<ClienteProps[]>(
       `/clientes/search?${searchParams.toString()}`
