@@ -21,6 +21,7 @@ export const enderecosApi = {
     if (params?.numero !== null && params?.numero !== undefined) {
       searchParams.set('numero', String(params.numero));
     }
+    if (params?.status) searchParams.set('status', String(params.status));
 
     const data = await restClient.get<EnderecoProps[]>(
       `/enderecos/search?${searchParams.toString()}`
