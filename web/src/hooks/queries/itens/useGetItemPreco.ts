@@ -1,4 +1,4 @@
-import { itensApi } from '@/api/ itensApi';
+import { itensApi } from '@/api/itensApi';
 import { ItensPrecoFilterQuery } from '@/types/itens/filtersQuery';
 import { useQuery } from '@tanstack/react-query';
 
