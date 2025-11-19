@@ -191,6 +191,7 @@ async function main() {
       DECLARE
           _item_row itens%ROWTYPE;
           _projeto_row projetos%ROWTYPE;
+          _existing_projeto_item projeto_itens%ROWTYPE;
       BEGIN
           -- Valida quantidade
           IF _quantidade <= 0 THEN
@@ -214,29 +215,51 @@ async function main() {
               RAISE EXCEPTION 'Projeto não encontrado: %', _projeto_id;
           END IF;
           
-          -- Insere ou atualiza projeto_item
-          INSERT INTO projeto_itens (
-              projeto_id, 
-              item_id, 
-              quantidade, 
-              preco, 
-              codigo, 
-              nomenclatura, 
-              unidade
-          ) VALUES (
-              _projeto_id, 
-              _item_id, 
-              _quantidade, 
-              _preco, 
-              _item_row.codigo, 
-              _item_row.nomenclatura, 
-              _item_row.unidade
-          )
-          ON CONFLICT (projeto_id, item_id) 
-          DO UPDATE SET
-              quantidade = projeto_itens.quantidade + EXCLUDED.quantidade,
-              preco = EXCLUDED.preco,
-              atualizado_em = CURRENT_TIMESTAMP;
+          -- Verifica se já existe (mesmo com status = false)
+          SELECT * INTO _existing_projeto_item 
+          FROM projeto_itens 
+          WHERE projeto_id = _projeto_id AND item_id = _item_id;
+          
+          IF _existing_projeto_item.id IS NOT NULL THEN
+              -- Se existir mas estiver deletado (status = false), reativa
+              IF _existing_projeto_item.status = false THEN
+                  UPDATE projeto_itens SET
+                      quantidade = _quantidade,
+                      preco = _preco,
+                      status = true,
+                      codigo = _item_row.codigo,
+                      nomenclatura = _item_row.nomenclatura,
+                      unidade = _item_row.unidade,
+                      atualizado_em = CURRENT_TIMESTAMP
+                  WHERE id = _existing_projeto_item.id;
+              ELSE
+                  -- Se estiver ativo, incrementa quantidade
+                  UPDATE projeto_itens SET
+                      quantidade = quantidade + _quantidade,
+                      preco = _preco,
+                      atualizado_em = CURRENT_TIMESTAMP
+                  WHERE id = _existing_projeto_item.id;
+              END IF;
+          ELSE
+              -- Se não existir, insere novo
+              INSERT INTO projeto_itens (
+                  projeto_id, 
+                  item_id, 
+                  quantidade, 
+                  preco, 
+                  codigo, 
+                  nomenclatura, 
+                  unidade
+              ) VALUES (
+                  _projeto_id, 
+                  _item_id, 
+                  _quantidade, 
+                  _preco, 
+                  _item_row.codigo, 
+                  _item_row.nomenclatura, 
+                  _item_row.unidade
+              );
+          END IF;
           
       END; 
       $$ LANGUAGE plpgsql;
