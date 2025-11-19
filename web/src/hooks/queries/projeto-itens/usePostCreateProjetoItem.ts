@@ -9,6 +9,8 @@ export const usePostCreateProjetoItem = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['useGetProjetoItemById'], exact: false });
       queryClient.invalidateQueries({ queryKey: ['useGetProjetoItensBySearch'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['useGetProjetoById'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['useGetProjetosBySearch'], exact: false });
     },
   });
 };
