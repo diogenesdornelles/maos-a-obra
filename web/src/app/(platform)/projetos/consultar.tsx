@@ -17,6 +17,7 @@ import { ProjetoProps } from '@/types/projetos/projetos';
 import { formatCurrency } from '@/utils/parseCurrency';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
+import { Eye } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Pressable, TouchableOpacity, View } from 'react-native';
@@ -248,8 +249,8 @@ export default function ProjetosConsultarScreen() {
             return (
               <Pressable
                 onPress={() => handleProjetoPress(item)}
-                className="py-3 active:opacity-70">
-                <View className="flex items-center justify-center">
+                className="py-3 active:opacity-70 flex-row items-center justify-between">
+                <View className="flex flex-1 items-center justify-center">
                   <Text className="text-base font-medium">{item?.nome}</Text>
                   {item?.cliente?.nome && item?.cliente?.sobrenome && (
                     <Text className="text-sm text-muted-foreground">
@@ -297,6 +298,9 @@ export default function ProjetosConsultarScreen() {
                       </Text>
                     </View>
                   )}
+                </View>
+                <View className="pl-4 justify-center flex-0s">
+                  <Eye size={22} color="#1d4ed8" />
                 </View>
               </Pressable>
             );
