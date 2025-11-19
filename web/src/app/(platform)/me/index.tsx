@@ -17,7 +17,7 @@ import { ErrorResponse } from '@/types/errorParser';
 import { arrayOfErrors } from '@/utils/errorsParser';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
-import { Folder, LogOut } from 'lucide-react-native';
+import { Eye, LogOut } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
@@ -171,7 +171,7 @@ export default function PerfilScreen() {
   const projetosMenu: CardMenuProps[] =
     usuario?.projetos?.map((projeto, idx) => ({
       label: projeto.nome,
-      icon: Folder,
+      icon: Eye,
       description: projeto.descricao || idx,
       onPress: () =>
         projeto.status !== 'CANCELADO'
