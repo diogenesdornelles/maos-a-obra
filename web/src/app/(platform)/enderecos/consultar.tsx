@@ -6,7 +6,8 @@ import { useGetEnderecosBySearch } from '@/hooks/queries/enderecos/useGetEnderec
 import { EnderecoProps } from '@/types/enderecos/enderecos';
 import { router, Stack } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { Eye } from 'lucide-react-native';
 
 export default function EnderecosConsultarScreen() {
   const [logradouro, setLogradouro] = useState('');
@@ -70,8 +71,8 @@ export default function EnderecosConsultarScreen() {
             return (
               <Pressable
                 onPress={() => handleEnderecoPress(item)}
-                className="py-3 active:opacity-70">
-                <View className="flex items-center justify-center">
+                className="py-3 active:opacity-70 flex-row items-center justify-between">
+                <View className="flex flex-1 items-center justify-center">
                   <Text className="text-base font-medium">
                     {item?.bairro?.nome?.split(' - ')[0]}
                   </Text>
@@ -95,6 +96,9 @@ export default function EnderecosConsultarScreen() {
                       Complemento: {item?.complemento}
                     </Text>
                   )}
+                </View>
+                <View className="pl-4 justify-center flex-0">
+                  <Eye size={22} color="#1d4ed8" />
                 </View>
               </Pressable>
             );
