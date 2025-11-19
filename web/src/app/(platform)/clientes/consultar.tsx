@@ -5,6 +5,7 @@ import { Text } from '@/components/ui/text';
 import { useGetClientesBySearch } from '@/hooks/queries/clients/useGetClientesBySearch';
 import { ClienteProps } from '@/types/clientes/clientes';
 import { router, Stack } from 'expo-router';
+import { Eye } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -73,8 +74,8 @@ export default function ClientesConsultarScreen() {
             return (
               <Pressable
                 onPress={() => handleClientePress(item)}
-                className="py-3 active:opacity-70">
-                <View className="flex items-center justify-center">
+                className="py-3 active:opacity-70 flex-row items-center justify-between">
+                <View className="flex flex-1 items-center justify-center">
                   <Text className="text-base font-medium">
                     {item?.nome} {item?.sobrenome}
                   </Text>
@@ -97,6 +98,9 @@ export default function ClientesConsultarScreen() {
                       Logradouro: {item?.endereco?.logradouro}
                     </Text>
                   )}
+                </View>
+                <View className="pl-4 justify-center flex-0">
+                  <Eye size={22} color="#1d4ed8" />
                 </View>
               </Pressable>
             );
