@@ -179,11 +179,11 @@ export default function ProjetosManageItensScreen() {
     },
   };
 
-  function handleEdit(item: ProjetoItemProps) {
+  function handleEditProjetoItem(item: ProjetoItemProps) {
     setEditingItemId(item.id);
   }
 
-  function handleCancelEdit() {
+  function handleCancelEditProjetoItem() {
     setEditingItemId(null);
     reset({
       itemId: '',
@@ -194,18 +194,20 @@ export default function ProjetosManageItensScreen() {
     setItemIdSearch('');
   }
 
-  function handleDeleteConfirm(itemId: string) {
+  function handleDeleteProjetoItemConfirm(itemId: string) {
     setDeletingItemId(itemId);
     setIsDeleteModalOpen(true);
   }
 
-  function handleDelete() {
+  async function handleDeleteProjetoItem() {
     if (!deletingItemId) return;
 
     deleteProjetoItem(deletingItemId, {
-      onSuccess: () => {
+      onSuccess: async () => {
         setIsDeleteModalOpen(false);
         setDeletingItemId(null);
+        await refetchProjetoItem();
+        await refetchProjeto();
       },
       onError: (error) => {
         setIsDeleteModalOpen(false);
@@ -259,7 +261,7 @@ export default function ProjetosManageItensScreen() {
           onSuccess: () => {
             setModalType('success');
             setIsOpen(true);
-            handleCancelEdit();
+            handleCancelEditProjetoItem();
             refetchProjetoItem();
             refetchProjeto();
           },
@@ -403,7 +405,7 @@ export default function ProjetosManageItensScreen() {
           </Button>
 
           {editingItemId && (
-            <Button variant="secondary" onPress={handleCancelEdit}>
+            <Button variant="secondary" onPress={handleCancelEditProjetoItem}>
               <Text>Cancelar</Text>
             </Button>
           )}
@@ -450,13 +452,13 @@ export default function ProjetosManageItensScreen() {
 
                 <View className="flex-row gap-2">
                   <TouchableOpacity
-                    onPress={() => handleEdit(item)}
+                    onPress={() => handleEditProjetoItem(item)}
                     className="rounded-lg bg-blue-100 p-2 active:bg-blue-200">
                     <Edit size={20} className="text-blue-700" />
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    onPress={() => handleDeleteConfirm(item.id)}
+                    onPress={() => handleDeleteProjetoItemConfirm(item.id)}
                     className="rounded-lg bg-red-100 p-2 active:bg-red-200">
                     <Trash2 size={20} className="text-red-700" />
                   </TouchableOpacity>
@@ -490,7 +492,7 @@ export default function ProjetosManageItensScreen() {
             <Button variant="secondary" onPress={() => setIsDeleteModalOpen(false)}>
               <Text>Cancelar</Text>
             </Button>
-            <Button variant="destructive" onPress={handleDelete}>
+            <Button variant="destructive" onPress={handleDeleteProjetoItem}>
               <Text>Excluir</Text>
             </Button>
           </View>
