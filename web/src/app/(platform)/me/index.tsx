@@ -231,6 +231,7 @@ export default function PerfilScreen() {
                 placeholder="Digite o nome"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
+                editable={isEditing}
                 error={errors.nome?.message}
               />
             )}
@@ -246,6 +247,7 @@ export default function PerfilScreen() {
                 placeholder="Digite o sobrenome"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
+                editable={isEditing}
                 error={errors.sobrenome?.message}
               />
             )}
@@ -262,6 +264,7 @@ export default function PerfilScreen() {
                 keyboardType="email-address"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
+                editable={isEditing}
                 error={errors.email?.message}
               />
             )}
@@ -278,6 +281,7 @@ export default function PerfilScreen() {
                 keyboardType="numeric"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
+                editable={isEditing}
                 error={errors.cpf?.message}
               />
             )}
@@ -294,6 +298,7 @@ export default function PerfilScreen() {
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
                 error={errors.nascimento?.message}
+                editable={isEditing}
               />
             )}
           />
@@ -310,6 +315,7 @@ export default function PerfilScreen() {
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
+                  editable={isEditing}
                   error={errors.senha?.message}
                 />
               )}
