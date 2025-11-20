@@ -214,6 +214,7 @@ function handleEditToggle() {
                 label="Bairro"
                 isRequired
                 value={value}
+                editable={isEditing}
                 labelModalSearch="Selecionar bairro"
                 options={bairrosOptions}
                 onValueChange={onChange}
@@ -253,6 +254,7 @@ function handleEditToggle() {
                 placeholder="Digite o logradouro"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
+                editable={isEditing}
                 error={errors.logradouro?.message}
               />
             )}
@@ -266,6 +268,7 @@ function handleEditToggle() {
                 label="Número"
                 placeholder="Digite o número"
                 keyboardType="numeric"
+                editable={isEditing}
                 value={value || undefined}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.numero?.message}
@@ -281,6 +284,7 @@ function handleEditToggle() {
                 label="CEP"
                 placeholder="Digite o CEP"
                 keyboardType="numeric"
+                editable={isEditing}
                 value={value || undefined}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.cep?.message}
