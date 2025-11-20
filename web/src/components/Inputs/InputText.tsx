@@ -13,6 +13,7 @@ interface InputTextProps {
   secureTextEntry?: boolean;
   keyboardType?: KeyboardType;
   maxLength?: number;
+  editable?: boolean
 }
 
 export function InputText({
@@ -25,6 +26,7 @@ export function InputText({
   secureTextEntry = false,
   keyboardType,
   maxLength,
+  editable = true,
 }: InputTextProps) {
   return (
     <View className="mb-3">
@@ -34,6 +36,7 @@ export function InputText({
         </Label>
       )}
       <Input
+        editable={editable}
         maxLength={maxLength}
         keyboardType={keyboardType}
         value={value}
