@@ -6,7 +6,7 @@ import { useGetProjetoById } from '@/hooks/queries/projetos/useGetProjetoById';
 import { useDebounce } from '@/hooks/useDebounce';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { useLocalSearchParams } from 'expo-router';
-import ProjetosAdicionarItensScreen from '../../../../src/app/(platform)/projetos/[id]';
+import ProjetosAdicionarItensScreen from '../../../../src/app/(platform)/projetos/items/[id]';
 
 jest.mock('@/hooks/queries/projetos/useGetProjetoById');
 jest.mock('@/hooks/queries/itens/useGetItensBySearch');
