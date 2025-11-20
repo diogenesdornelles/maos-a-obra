@@ -17,13 +17,13 @@ import { ProjetoProps } from '@/types/projetos/projetos';
 import { formatCurrency } from '@/utils/parseCurrency';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, Stack } from 'expo-router';
-import { Eye } from 'lucide-react-native';
+import { Edit, Eye } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Pressable, TouchableOpacity, View } from 'react-native';
 
 export default function ProjetosConsultarScreen() {
-  // STATES REACT
+
   const [filters, setFilters] = useState<consultaProjetoFormData>();
 
   const [clientSearch, setClientSearch] = useState('');
@@ -41,7 +41,6 @@ export default function ProjetosConsultarScreen() {
     mode: 'onChange',
   });
 
-  // API REACT QUERY
   const {
     data: projetos,
     isLoading: isLoadingProjetos,
@@ -79,7 +78,6 @@ export default function ProjetosConsultarScreen() {
     take: 20,
   });
 
-  // LISTAS
   const projetoList = useMemo(() => projetos?.pages.flatMap((page) => page) ?? [], [projetos]);
 
   const clientOptions: SelectOption[] = useMemo(() => {
@@ -106,7 +104,6 @@ export default function ProjetosConsultarScreen() {
     );
   }, [estados]);
 
-  // FUNÇÕES E USEEFFECTS
   function onSubmit(data: consultaProjetoFormData) {
     setFilters({ clienteId: data?.clienteId, estado: data?.estado, nome: data?.nome });
   }
@@ -299,8 +296,18 @@ export default function ProjetosConsultarScreen() {
                     </View>
                   )}
                 </View>
-                <View className="pl-4 justify-center flex-0s">
-                  <Eye size={22} color="#1d4ed8" />
+                <View className="pl-4 justify-center flex-0s gap-4">
+                  <Pressable
+                    onPress={() => router.push(`/(platform)/projetos/${item.id}`)}
+                    className="p-3 rounded-lg bg-blue-100 active:opacity-70">
+                    <Eye size={20} color="#1d4ed8" />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => router.push(`/(platform)/projetos/items/${item.id}`)}
+                    className="p-3 rounded-lg bg-green-100 active:opacity-70"
+                    disabled={item.status === 'CANCELADO'}>
+                    <Edit size={20} className="text-blue-700" />
+                  </Pressable>
                 </View>
               </Pressable>
             );
