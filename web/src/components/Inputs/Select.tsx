@@ -24,6 +24,7 @@ interface SelectProps<T = any> {
   options: SelectOption<T>[];
   modalSearchPlaceholder?: string;
   emptyMessage?: string;
+  editable?: boolean; 
   labelModalSearch?: string;
   isLoading?: boolean;
   isFetchingNextPage?: boolean;
@@ -53,6 +54,7 @@ export function Select<T = any>({
   isLoading = false,
   isFetchingNextPage = false,
   hasNextPage = false,
+  editable = true,
   onLoadMore,
   onSearchChange,
   renderItem,
@@ -106,7 +108,7 @@ export function Select<T = any>({
       {error && <Text className="mt-1 text-xs text-red-500">{error}</Text>}
 
       <Modal
-        isOpen={isOpen}
+        isOpen={isOpen && editable}
         height={600}
         width={370}
         Header={
@@ -114,6 +116,7 @@ export function Select<T = any>({
             <InputText
               label={labelModalSearch}
               value={searchText}
+              editable={editable}
               onChangeText={handleSearch}
               placeholder={modalSearchPlaceholder}
             />
