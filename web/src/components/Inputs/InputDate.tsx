@@ -13,6 +13,7 @@ interface InputDateProps {
   onChangeText?: (text: string) => void;
   error?: string;
   isRequired?: boolean;
+  editable?: boolean;
 }
 
 export function InputDate({
@@ -22,6 +23,7 @@ export function InputDate({
   onChangeText,
   error,
   isRequired = false,
+  editable = true,
 }: InputDateProps) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -75,12 +77,12 @@ export function InputDate({
         <Input
           value={formatDateToBR(value)}
           placeholder={placeholder || 'Selecione uma data'}
-          editable={false}
+          editable={editable}
           pointerEvents="none"
           className={cn(error ? 'border-red-500' : '', 'opacity-100')}
         />
       </Pressable>
-      {showDatePicker && (
+      {showDatePicker && editable && (
         <DateTimePicker
           value={selectedDate}
           mode="date"
@@ -88,6 +90,7 @@ export function InputDate({
           onChange={handleDateChange}
           maximumDate={new Date()}
           locale="pt-BR"
+
         />
       )}
       {error && <Text className="mt-1 text-xs text-red-500">{error}</Text>}
