@@ -11,6 +11,7 @@ interface InputTextAreaPros {
   error?: string;
   isRequired?: boolean;
   maxLength?: number;
+  editable?: boolean;
 }
 
 export function InputTextArea({
@@ -21,6 +22,7 @@ export function InputTextArea({
   error,
   isRequired = false,
   maxLength,
+  editable = true
 }: InputTextAreaPros) {
   return (
     <View className="mb-3">
@@ -32,6 +34,7 @@ export function InputTextArea({
       <Textarea
         maxLength={maxLength}
         value={value}
+        editable={editable}
         onChangeText={onChangeText}
         placeholder={placeholder}
         className={error ? 'border-red-500' : ''}
