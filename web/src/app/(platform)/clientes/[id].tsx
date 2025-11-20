@@ -225,6 +225,7 @@ export default function ClienteDetailScreen() {
               <InputText
                 label="Nome"
                 isRequired
+                editable={isEditing}
                 placeholder="Digite o nome"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
@@ -239,6 +240,7 @@ export default function ClienteDetailScreen() {
             name="sobrenome"
             render={({ field: { onChange, value } }) => (
               <InputText
+                editable={isEditing}
                 label="Sobrenome"
                 placeholder="Digite o sobrenome"
                 onChangeText={isEditing ? onChange : undefined}
@@ -255,6 +257,7 @@ export default function ClienteDetailScreen() {
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="CPF"
+                editable={isEditing}
                 placeholder="Digite o CPF"
                 keyboardType="numeric"
                 onChangeText={isEditing ? onChange : undefined}
@@ -271,6 +274,7 @@ export default function ClienteDetailScreen() {
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="CNPJ"
+                editable={isEditing}
                 placeholder="Digite o CNPJ"
                 keyboardType="numeric"
                 onChangeText={isEditing ? onChange : undefined}
@@ -291,6 +295,7 @@ export default function ClienteDetailScreen() {
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
                 error={errors.nascimento?.message}
+                editable={isEditing}
               />
             )}
           />
@@ -302,6 +307,7 @@ export default function ClienteDetailScreen() {
             render={({ field: { onChange, value } }) => (
               <InputText
                 label="Telefone"
+                editable={isEditing}
                 placeholder="Digite o telefone"
                 keyboardType="numeric"
                 onChangeText={isEditing ? onChange : undefined}
@@ -319,6 +325,7 @@ export default function ClienteDetailScreen() {
               <InputText
                 label="Email"
                 placeholder="Digite o email"
+                editable={isEditing}
                 keyboardType="email-address"
                 onChangeText={isEditing ? onChange : undefined}
                 value={value}
@@ -335,6 +342,7 @@ export default function ClienteDetailScreen() {
               <Select<EnderecoProps>
                 label="Endereço"
                 value={value}
+                editable={isEditing}
                 labelModalSearch="Selecionar endereço"
                 options={enderecosOptions}
                 onValueChange={onChange}
