@@ -73,13 +73,17 @@ export function InputDate({
           {label} {isRequired && <Text className="text-red-500">*</Text>}
         </Label>
       )}
-      <Pressable onPress={() => setShowDatePicker(true)}>
+      <Pressable onPress={() => editable && setShowDatePicker(true)} disabled={!editable}>
         <Input
           value={formatDateToBR(value)}
           placeholder={placeholder || 'Selecione uma data'}
-          editable={editable}
+          editable={false}
           pointerEvents="none"
-          className={cn(error ? 'border-red-500' : '', 'opacity-100')}
+          className={cn(
+            error ? 'border-red-500' : '',
+            'opacity-100',
+            !editable && 'text-muted-foreground opacity-50'
+          )}
         />
       </Pressable>
       {showDatePicker && editable && (
