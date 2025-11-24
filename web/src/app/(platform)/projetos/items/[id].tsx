@@ -305,7 +305,7 @@ export default function ProjetosManageItensScreen() {
     <>
       <Stack.Screen
         options={{
-          headerTitle: `Projetos / adicionar itens / ${projeto?.nome}`,
+          headerTitle: `Projetos / gerenciar itens / ${projeto?.nome}`,
           headerRight: () => (
             <Pressable onPress={handleDeleteProjetoConfirm} className="mr-4">
               <Trash2 size={20} className="text-muted-foreground" />
@@ -328,9 +328,9 @@ export default function ProjetosManageItensScreen() {
               label="Item"
               isRequired
               value={value}
-              editable={!!editingItemId || false}
               labelModalSearch="Selecionar item"
               options={itensOptions}
+              disabled={editingItemId ? true : false}
               onValueChange={onChange}
               renderItem={(item, isSelected, onSelect) => {
                 return (
@@ -385,7 +385,6 @@ export default function ProjetosManageItensScreen() {
               isRequired
               placeholder="Item quantidade"
               keyboardType="numeric"
-              editable={!!editingItemId || false}
               onChangeText={(text) => {
                 const numericValue = parseFloat(text) || 0;
                 onChange(numericValue);
