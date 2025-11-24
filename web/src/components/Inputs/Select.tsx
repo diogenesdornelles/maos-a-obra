@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { Modal } from '../Modal';
 import { InputText } from './InputText';
+import { cn } from '@/lib/utils';
 
 export interface SelectOption<T = any> {
   label: string;
@@ -76,6 +77,8 @@ export function Select<T = any>({
     setSearchText('');
   };
 
+  const isDisabled = disabled || !editable;
+
   const filteredOptions = onSearchChange
     ? options
     : options.filter((opt) => opt.label.toLowerCase().includes(searchText.toLowerCase()));
@@ -95,12 +98,15 @@ export function Select<T = any>({
       )}
 
       <Pressable
-        onPress={() => !disabled && setIsOpen(true)}
-        disabled={disabled}
+        onPress={() => !isDisabled && setIsOpen(true)}
+        disabled={isDisabled}
         className={`flex h-10 flex-row items-center justify-between rounded-md border px-3 py-2 ${
           error ? 'border-red-500' : 'border-input'
-        } ${disabled ? 'opacity-50' : ''}`}>
-        <Text className={selectedOption ? '' : 'text-muted-foreground'}>
+        } ${isDisabled ? 'opacity-50' : ''}`}>
+        <Text className={cn(
+          selectedOption ? '' : 'text-muted-foreground',
+          !editable && 'text-muted-foreground'
+        )}>
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
       </Pressable>
