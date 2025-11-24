@@ -300,6 +300,7 @@ function handleEditToggle() {
                 label="Complemento"
                 placeholder="Digite algum complemento"
                 value={value || undefined}
+                editable={isEditing}
                 onChangeText={isEditing ? onChange : undefined}
                 error={errors?.complemento?.message}
               />
